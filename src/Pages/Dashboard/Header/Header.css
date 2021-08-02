@@ -1,0 +1,10 @@
+.header {
+  display: flex;
+  align-items: center;
+}
+
+.query-input {
+  flex: 0 0 auto;
+  margin-left: auto;
+  margin-right: auto;
+}
