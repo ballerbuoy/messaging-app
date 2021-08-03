@@ -1,18 +1,24 @@
 import React from "react";
 
+type result = {
+  username: string;
+  avatar: string;
+};
+
 export interface Props {
-  results: string[];
+  results: result[];
 }
 
 export function Dropdown(props: Props) {
-  let { results } = props;
-  if (results.length > 5) {
-    results = results.slice(0, 5);
-  }
+  const { results } = props;
   return (
     <div className="dropdown">
       {results.map((result) => {
-        return <div className="dropdown-item">{result}</div>;
+        return (
+          <div className="dropdown-item" key={result.username}>
+            {result.username}
+          </div>
+        );
       })}
     </div>
   );

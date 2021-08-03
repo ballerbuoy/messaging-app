@@ -1,0 +1,12 @@
+.main {
+  flex: 1 0 auto;
+  overflow: scroll;
+  display: flex;
+  flex-direction: column;
+}
+
+.newMessage {
+  height: 10%;
+  flex: 0 0 auto;
+  justify-self: flex-end;
+}

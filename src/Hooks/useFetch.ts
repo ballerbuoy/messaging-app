@@ -1,34 +1,56 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+const BASE_URL = process.env.REACT_APP_SERVER_URL;
 
-export const useFetch = (url = "", options = {}, immediate = true) => {
-  const [data, setData] = useState(null);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
+type useQueryParams = {
+  url: string;
+  method: string;
+  payload?: Object;
+  skip?: boolean;
+};
 
-  const executeFetch = useCallback(async () => {
-    setLoading(true);
-    await fetch(url, options)
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        setData(data);
-        setError(null);
-        return data;
-      })
-      .catch((error) => {
-        setError(error);
-        setData(null);
-        return error;
-      })
-      .finally(() => setLoading(false));
-  }, [url, options]);
+export const useFetch = <T>(params: useQueryParams) => {
+  const { url, method, payload } = params;
+  const skip = params.skip || false;
+
+  const [data, setData] = useState<T | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    if (immediate) {
-      executeFetch();
+    const options = { method };
+    if (payload) {
+      Object.assign(options, {
+        body: JSON.stringify(payload),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
     }
-  }, [immediate, executeFetch]);
 
-  return { data, error, loading, executeFetch };
+    if (!skip) {
+      let serverFailure = false;
+      setLoading(true);
+      fetch(BASE_URL + url, options)
+        .then((res) => {
+          if (!res.ok) {
+            serverFailure = true;
+          }
+          return res.json();
+        })
+        .then((data) => {
+          if (!serverFailure) {
+            setData(JSON.parse(data));
+          } else {
+            throw new Error(data.error);
+          }
+        })
+        .catch((error) => {
+          setError(error);
+          setData(null);
+        })
+        .finally(() => setLoading(false));
+    }
+  }, [url, skip, method, payload]);
+
+  return { data, error, loading };
 };

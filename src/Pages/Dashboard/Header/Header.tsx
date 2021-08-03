@@ -6,12 +6,12 @@ import { Dropdown } from "../../../Utils/Dropdown/Dropdown";
 
 export interface Props {}
 
-export default function Header(props: Props) {
+export function Header(props: Props) {
   const [query, setQuery] = useState("");
   const [result, setResult] = useState([]);
 
   const getQueryResults = async () => {
-    await fetch(`http://localhost:4000/query/${query}`, {
+    await fetch(`http://localhost:4000/user/query/${query}`, {
       method: "GET",
     })
       .then((res) => res.json())
@@ -23,7 +23,9 @@ export default function Header(props: Props) {
     await getQueryResults();
   };
 
-  const dropdown = result.length ? <Dropdown results={result} /> : null;
+  const dropdown = result.length ? (
+    <Dropdown results={result.length > 5 ? result.slice(0, 5) : result} />
+  ) : null;
 
   return (
     <div className="header">

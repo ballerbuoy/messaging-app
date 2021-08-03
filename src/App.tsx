@@ -3,18 +3,24 @@ import "./App.css";
 import { Login } from "./Pages/Login/Login";
 import { useSessionStorage } from "./Hooks/useSessionStorage";
 import { Dashboard } from "./Pages/Dashboard/Dashboard";
+import { UserInfo } from "./Types/User.interface";
+import { useState } from "react";
+import { useCallback } from "react";
 
-export const UserContext = React.createContext({
+const initialValue = {
   username: "",
   password: "",
   avatar: "",
-  chatRoomsSubscribed: [],
-});
+  personalChatsSubscribed: [],
+  groupChatsSubscribed: [],
+};
+
+export const UserContext = React.createContext<UserInfo>(initialValue);
 
 function App() {
-  const [user, setUser] = useSessionStorage("username");
-  console.log(user);
-  if (!user) {
+  // const [user, setUser] = useSessionStorage<UserInfo>("username");
+  const [user, setUser] = useState<UserInfo>(initialValue);
+  if (!user.username) {
     return <Login setToken={setUser} />;
   }
 
