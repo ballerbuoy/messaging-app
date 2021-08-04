@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import "./Login.css";
 import { useFetch } from "../../Hooks/useFetch";
+import { useEffect } from "react";
+import { UserInfo } from "../../Types/User.interface";
 
 export interface LoginProps {
-  setToken: React.Dispatch<React.SetStateAction<any>>;
+  setToken: (arg: UserInfo) => void;
 }
 
 export function Login(props: LoginProps) {
@@ -11,45 +13,27 @@ export function Login(props: LoginProps) {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  //   const { data, error, loading, executeFetch } = useFetch(
-  //     "http://localhost:4000/login",
-  //     {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({
-  //         username,
-  //         password,
-  //       }),
-  //     },
-  //     false
-  //   );
+  const [queryData, setQueryData] = useState({ skip: true, payload: {} });
+  const { data, error, loading } = useFetch<UserInfo>({
+    url: "/login",
+    method: "POST",
+    payload: queryData.payload,
+    skip: queryData.skip,
+  });
 
-  const handleSubmit = async (e: React.SyntheticEvent) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await fetch("http://localhost:4000/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username,
-        password,
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (!data.error) {
-          setToken(JSON.parse(data));
-        } else {
-          throw new Error(data.error);
-        }
-      })
-      .catch((err) => setError(err));
-    // await executeFetch().then(setToken);
+    setQueryData({
+      payload: { username, password },
+      skip: false,
+    });
   };
+
+  useEffect(() => {
+    if (data) {
+      setToken(data);
+    }
+  }, [data, setToken]);
 
   const validationError = error ? (
     <div className="error">Invalid username and password combination!</div>

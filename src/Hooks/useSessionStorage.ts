@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
-export const useSessionStorage = (key: string, initialValue = "") => {
-  const [state, setState] = useState(() => {
+export const useSessionStorage = <T>(key: string, initialValue = "") => {
+  const [state, setState] = useState<T | string>(() => {
     const storedValue = sessionStorage.getItem(key);
     return storedValue ? JSON.parse(storedValue) : initialValue;
   });
