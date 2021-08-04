@@ -1,10 +1,24 @@
 .header {
   display: flex;
   align-items: center;
+  flex: 0;
+  background-color: #1d3557;
+}
+
+.query-wrapper {
+  flex: 1 0 auto;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
 }
 
 .query-input {
-  flex: 0 0 auto;
-  margin-left: auto;
-  margin-right: auto;
+  background-color: #f1faee;
+  padding: 2px;
+  text-align: center;
+  width: 40%;
+}
+
+.query-input::placeholder {
+  text-align: center;
 }

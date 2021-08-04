@@ -1,4 +1,5 @@
 import React from "react";
+import "./Dropdown.css";
 
 type result = {
   username: string;
@@ -16,7 +17,7 @@ export function Dropdown(props: Props) {
       {results.map((result) => {
         return (
           <div className="dropdown-item" key={result.username}>
-            {result.username}
+            {`${result.username[0].toUpperCase()}${result.username.substr(1)}`}
           </div>
         );
       })}

@@ -1,38 +1,7 @@
-.messageItem {
-  display: flex;
-  padding: 2px;
-  gap: 10px;
-}
-
-.avatar {
-  flex: 0 0 auto;
-  height: 45px;
-  width: 45px;
-  border-radius: 3px;
-}
-
-.message {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.username {
-  display: inline-block;
-  margin: 2px;
-  font-weight: bold;
-  font-size: larger;
-  margin-right: 10px;
-}
-
-.timestamp {
-  font-size: small;
-}
-
-.message-wrapper {
+.messages-wrapper {
   overflow: scroll;
-  flex: 1 0 auto;
-  margin-top: auto;
+  flex: 0 0 auto;
+  height: 82vh;
   display: flex;
   flex-direction: column;
   align-self: stretch;

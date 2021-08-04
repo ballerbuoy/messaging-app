@@ -16,7 +16,7 @@ export function Dashboard(props: Props) {
   );
 
   return (
-    <div>
+    <div className="wrapper">
       <Header />
       <div className="main-wrapper">
         <Sidebar

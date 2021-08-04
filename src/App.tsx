@@ -5,7 +5,6 @@ import { useSessionStorage } from "./Hooks/useSessionStorage";
 import { Dashboard } from "./Pages/Dashboard/Dashboard";
 import { UserInfo } from "./Types/User.interface";
 import { useState } from "react";
-import { useCallback } from "react";
 
 const initialValue = {
   username: "",
