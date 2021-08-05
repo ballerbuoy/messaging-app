@@ -1,8 +1,9 @@
 .sidebar {
-  width: 25vw;
-  background-color: beige;
-  height: 97vh;
+  width: 20vw;
+  background-color: #1d3557;
   flex: 0 0 auto;
   display: flex;
   flex-direction: column;
+  height: 93vh;
+  color: #f1faee;
 }

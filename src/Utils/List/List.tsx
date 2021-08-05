@@ -11,17 +11,23 @@ export interface Props {
   list: listItem[];
   title: string;
   changeSelectedChatRoom: React.Dispatch<React.SetStateAction<string>>;
+  selectedChatRoom: string;
 }
 
 export function List(props: Props) {
-  const { title, list } = props;
+  const { title, list, selectedChatRoom } = props;
   return (
     <div className="list">
       <h4>{title}</h4>
+      <hr />
       {list.map((listItem) => {
+        const className =
+          listItem.roomId === selectedChatRoom
+            ? "chatroom selected"
+            : "chatroom";
         return (
           <div
-            className="list-item chatroom"
+            className={className}
             key={listItem.roomId}
             onClick={() => props.changeSelectedChatRoom(listItem.roomId)}
           >

@@ -1,32 +1,23 @@
-import React, { useState } from "react";
-import "./Login.css";
-import { useFetch } from "../../Hooks/useFetch";
-import { useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { useMutation } from "../../Hooks/useMutation";
 import { UserInfo } from "../../Types/User.interface";
+import "./Login.css";
 
-export interface LoginProps {
+type LoginProps = {
   setToken: (arg: UserInfo) => void;
-}
+};
 
-export function Login(props: LoginProps) {
-  const { setToken } = props;
-
+export function Login({ setToken }: LoginProps) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [queryData, setQueryData] = useState({ skip: true, payload: {} });
-  const { data, error, loading } = useFetch<UserInfo>({
+  const { data, error, loading, executeFetch } = useMutation<UserInfo>({
     url: "/login",
     method: "POST",
-    payload: queryData.payload,
-    skip: queryData.skip,
   });
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setQueryData({
-      payload: { username, password },
-      skip: false,
-    });
+    executeFetch({ username, password });
   };
 
   useEffect(() => {
@@ -42,28 +33,33 @@ export function Login(props: LoginProps) {
   return (
     <div className="login-wrapper">
       <h1>Please Log In!</h1>
-      <form onSubmit={handleSubmit}>
-        <label>
+      <form onSubmit={handleSubmit} className="login-form">
+        <label className="field-wrapper">
           <p>Username</p>
           <input
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            placeholder="username"
           />
         </label>
-        <label>
+        <label className="field-wrapper">
           <p>Password</p>
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            placeholder="password"
           />
         </label>
+        {validationError}
         <div>
-          <button type="submit">Submit</button>
+          <button type="submit" disabled={loading} className="login-button">
+            {" "}
+            {loading ? "Logging in..." : "Log In"}
+          </button>
         </div>
       </form>
-      {validationError}
     </div>
   );
 }

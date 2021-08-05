@@ -1,3 +1,21 @@
 .chatroom {
-  height: 5vh;
+  height: 4vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: default;
+}
+
+.chatroom:hover {
+  background-color: #457b9d;
+}
+
+.selected {
+  background-color: #a8dadc;
+  color: #1d3557;
+  font-weight: bold;
+}
+
+.list {
+  text-align: center;
 }

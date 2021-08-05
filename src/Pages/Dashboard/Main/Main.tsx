@@ -1,40 +1,33 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Messages } from "./Messages/Messages";
 import "./Main.css";
 import { useFetch } from "../../../Hooks/useFetch";
 import { MessageType } from "../../../Types/ChatRoom.interface";
 import { UserContext } from "../../../App";
+import { useMutation } from "../../../Hooks/useMutation";
 
-interface myProps {
+type Props = {
   selectedChatRoomId: string;
-}
+};
 
-export const Main = ({ selectedChatRoomId }: myProps) => {
-  const [postQueryOptions, setPostQueryOptions] = useState({
-    skip: true,
-    payload: {},
-  });
+export const Main = ({ selectedChatRoomId }: Props) => {
   const { username } = useContext(UserContext);
-  const typedMessage = useFetch<MessageType>({
+  const [message, setMessage] = useState("");
+  const { loading, executeFetch } = useMutation<MessageType>({
     url: `/chatroom/${selectedChatRoomId}`,
     method: "POST",
-    payload: postQueryOptions.payload,
-    skip: postQueryOptions.skip,
   });
-  const [message, setMessage] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMessage(e.target.value);
   };
 
   const handleClick = (e: React.FormEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     const curTime = new Date();
     const timestamp = `${curTime.getHours()}:${curTime.getMinutes()}`;
 
-    setPostQueryOptions({
-      skip: false,
-      payload: { text: message, timestamp, sentBy: username },
-    });
+    executeFetch({ text: message, timestamp, sentBy: username });
     setMessage("");
   };
 
@@ -46,10 +39,15 @@ export const Main = ({ selectedChatRoomId }: myProps) => {
           value={message}
           onChange={handleChange}
           placeholder="Type a message"
+          className="newMessage-input"
         />
-        <button type="submit" onClick={handleClick}>
-          {" "}
-          Send Message!{" "}
+        <button
+          type="submit"
+          onClick={handleClick}
+          disabled={loading}
+          className="newMessage-send"
+        >
+          {loading ? "Sending Message..." : "Send Message"}
         </button>
       </div>
     </div>

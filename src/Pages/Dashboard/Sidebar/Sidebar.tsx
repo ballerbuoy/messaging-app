@@ -9,19 +9,21 @@ type Props = {
   changeSelectedChatRoom: React.Dispatch<React.SetStateAction<string>>;
 };
 
-export function Sidebar(props: Props) {
+export function Sidebar({ selectedChatRoom, changeSelectedChatRoom }: Props) {
   const { personalChatsSubscribed, groupChatsSubscribed } =
     useContext(UserContext);
   return (
     <div className="sidebar">
       <List
         title="Direct Messages"
-        changeSelectedChatRoom={props.changeSelectedChatRoom}
+        selectedChatRoom={selectedChatRoom}
+        changeSelectedChatRoom={changeSelectedChatRoom}
         list={personalChatsSubscribed}
       />
       <List
         title="Channels"
-        changeSelectedChatRoom={props.changeSelectedChatRoom}
+        selectedChatRoom={selectedChatRoom}
+        changeSelectedChatRoom={changeSelectedChatRoom}
         list={groupChatsSubscribed}
       />
     </div>
