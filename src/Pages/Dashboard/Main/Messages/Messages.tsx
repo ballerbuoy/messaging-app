@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useFetch } from "../../../../Hooks/useFetch";
+import React, { useEffect } from "react";
 import { useMutation } from "../../../../Hooks/useMutation";
 import { ChatRoomType } from "../../../../Types/ChatRoom.interface";
 import { MessageItem } from "./MessageItem/MessageItem";
@@ -26,10 +25,14 @@ export const Messages = ({ selectedChatRoomId }: Props) => {
 
   return (
     <div className="messages-wrapper">
-      {chatRoom.data &&
-        chatRoom.data.messageHistory.map((message) => {
-          return <MessageItem message={message} key={message.messageId} />;
-        })}
+      {chatRoom.error ? (
+        <h3>The chatroom currently does not exist on the server :( </h3>
+      ) : null}
+      {chatRoom.data
+        ? chatRoom.data.messageHistory.map((message) => {
+            return <MessageItem message={message} key={message.messageId} />;
+          })
+        : null}
     </div>
   );
 };

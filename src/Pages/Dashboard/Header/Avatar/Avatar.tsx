@@ -6,6 +6,5 @@ export interface Props {}
 
 export function Avatar(props: Props) {
   const { avatar } = useContext(UserContext);
-  console.log(avatar);
   return <img src={avatar} alt="user-avatar" className="avatar" />;
 }

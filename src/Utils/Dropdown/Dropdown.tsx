@@ -8,6 +8,7 @@ type result = {
 
 export interface Props {
   results: result[];
+  changeSelectedChatRoom: (arg: string) => void;
 }
 
 export function Dropdown(props: Props) {
