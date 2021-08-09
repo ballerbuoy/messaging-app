@@ -1,35 +1,38 @@
 import React, { useState, useEffect } from "react";
-import { useMutation } from "../../Hooks/useMutation";
+
 import { UserInfo } from "../../Types/User.interface";
+
+import { useMutation } from "../../Hooks/useMutation";
+import { useUser } from "../../Contexts/user-context";
+import { ajaxClient } from "../../ajaxClient/ajaxClient";
+
 import "./Login.css";
-import { reducerAction } from "../../App";
 
-type LoginProps = {
-  updateUser: (arg: reducerAction) => void;
-};
-
-export function Login({ updateUser }: LoginProps) {
+export function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { data, error, loading, executeFetch } = useMutation<UserInfo>({
-    url: "/login",
-    method: "POST",
-  });
+  const { data, status, mutate } = useMutation<UserInfo>((payload) =>
+    ajaxClient.post({ url: "/login", payload })
+  );
+
+  const { dispatch } = useUser();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    executeFetch({ username, password });
+    mutate({ username, password });
   };
 
+  //TODO: pass options to mutate onSuccess, onError
   useEffect(() => {
     if (data) {
-      updateUser({ type: "NEW_USER", newUser: data });
+      dispatch({ type: "NEW_USER", newUser: data });
     }
-  }, [data, updateUser]);
+  }, [data, dispatch]);
 
-  const validationError = error ? (
-    <div className="error">Invalid username and password combination!</div>
-  ) : null;
+  const validationError =
+    status === "error" ? (
+      <div className="error">Invalid username and password combination!</div>
+    ) : null;
 
   return (
     <div className="login-wrapper">
@@ -55,9 +58,13 @@ export function Login({ updateUser }: LoginProps) {
         </label>
         {validationError}
         <div>
-          <button type="submit" disabled={loading} className="login-button">
+          <button
+            type="submit"
+            disabled={status === "loading"}
+            className="login-button"
+          >
             {" "}
-            {loading ? "Logging in..." : "Log In"}
+            {status === "loading" ? "Logging in..." : "Log In"}
           </button>
         </div>
       </form>

@@ -1,14 +1,14 @@
 import React from "react";
-import { reducerAction } from "../../../../App";
-import { NewChatroomForm } from "../../../../Utils/NewChatroomForm/NewChatroomForm";
+
+import { NewChatroomForm } from "../../../../Components/NewChatroomForm/NewChatroomForm";
+
 import "./Modal.css";
 
 type Props = {
   handleClose: () => void;
-  updateUser: (arg: reducerAction) => void;
 };
 
-export function Modal({ handleClose, updateUser }: Props) {
+export function Modal({ handleClose }: Props) {
   return (
     <div className="modal">
       <div className="modal-content">
@@ -19,7 +19,7 @@ export function Modal({ handleClose, updateUser }: Props) {
           </button>
         </div>
         <div className="modal-body">
-          <NewChatroomForm updateUser={updateUser} handleClose={handleClose} />
+          <NewChatroomForm handleClose={handleClose} />
         </div>
       </div>
     </div>

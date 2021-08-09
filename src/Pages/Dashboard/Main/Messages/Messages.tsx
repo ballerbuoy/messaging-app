@@ -1,38 +1,45 @@
-import React, { useEffect } from "react";
-import { useMutation } from "../../../../Hooks/useMutation";
-import { ChatRoomType } from "../../../../Types/ChatRoom.interface";
+import React from "react";
+
 import { MessageItem } from "./MessageItem/MessageItem";
+import { useQuery } from "../../../../Hooks/useQuery";
+
+import { IoMdPersonAdd } from "react-icons/io";
+
+import { ChatRoomType } from "../../../../Types/ChatRoom.interface";
+
 import "./Messages.css";
 
 type Props = {
-  selectedChatRoomId: string;
+  selectedChatRoomId: string | undefined;
 };
 
 export const Messages = ({ selectedChatRoomId }: Props) => {
-  const chatRoom = useMutation<ChatRoomType>({
+  const { data, error } = useQuery<ChatRoomType>({
     url: `/chatroom/${selectedChatRoomId}`,
-    method: "GET",
-  });
-
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      chatRoom.executeFetch();
-    }, 500);
-    return () => {
-      clearInterval(intervalId);
-    };
+    interval: 1000,
   });
 
   return (
     <div className="messages-wrapper">
-      {chatRoom.error ? (
-        <h3>The chatroom currently does not exist on the server :( </h3>
-      ) : null}
-      {chatRoom.data
-        ? chatRoom.data.messageHistory.map((message) => {
-            return <MessageItem message={message} key={message.messageId} />;
-          })
-        : null}
+      <div className="messages-header">
+        {data ? <h3 className="title">{data.roomName}</h3> : null}
+        {data && data.type === "group" ? (
+          <button className="add-user">
+            <IoMdPersonAdd />
+          </button>
+        ) : null}
+      </div>
+      <hr className="seperator"></hr>
+      <div className="messages-body">
+        {error ? (
+          <h3>The chatroom currently does not exist on the server :( </h3>
+        ) : null}
+        {data
+          ? data.messageHistory.map((message) => {
+              return <MessageItem message={message} key={message.messageId} />;
+            })
+          : null}
+      </div>
     </div>
   );
 };

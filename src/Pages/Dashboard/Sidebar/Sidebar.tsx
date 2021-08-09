@@ -1,25 +1,21 @@
-import React, { useState } from "react";
-import { List } from "../../../Utils/List/List";
-import { reducerAction, UserContext } from "../../../App";
-import { useContext } from "react";
-import "./Sidebar.css";
+import React, { useState, useCallback } from "react";
+
+import { List } from "../../../Components/List/List";
 import { Modal } from "./Modal/Modal";
-import { useCallback } from "react";
+import { useUser } from "../../../Contexts/user-context";
+
+import { FiPlusSquare } from "react-icons/fi";
+
+import "./Sidebar.css";
 
 type Props = {
   selectedChatRoom: string;
   changeSelectedChatRoom: React.Dispatch<React.SetStateAction<string>>;
-  updateUser: (arg: reducerAction) => void;
 };
 
-export function Sidebar({
-  selectedChatRoom,
-  changeSelectedChatRoom,
-  updateUser,
-}: Props) {
-  const { personalChatsSubscribed, groupChatsSubscribed } =
-    useContext(UserContext);
-
+export function Sidebar({ selectedChatRoom, changeSelectedChatRoom }: Props) {
+  const { state } = useUser();
+  const { personalChatsSubscribed, groupChatsSubscribed } = state;
   const [modalShow, setModalShow] = useState<boolean>(false);
   const showModal = () => setModalShow(true);
   const hideModal = useCallback(() => setModalShow(false), [setModalShow]);
@@ -41,11 +37,11 @@ export function Sidebar({
       />
       <hr />
       <button className="new-chatroom" onClick={showModal}>
-        Create New Chat Room
+        <div className="button-icon-wrapper">
+          <FiPlusSquare /> Add New Group
+        </div>
       </button>
-      {modalShow ? (
-        <Modal handleClose={hideModal} updateUser={updateUser} />
-      ) : null}
+      {modalShow ? <Modal handleClose={hideModal} /> : null}
     </div>
   );
 }
