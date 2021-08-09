@@ -1,4 +1,5 @@
 import React from "react";
+
 import "./List.css";
 
 type listItem = {
@@ -10,7 +11,7 @@ export interface Props {
   list: listItem[];
   title: string;
   changeSelectedChatRoom: React.Dispatch<React.SetStateAction<string>>;
-  selectedChatRoom: string;
+  selectedChatRoom: string | undefined;
 }
 
 export function List(props: Props) {

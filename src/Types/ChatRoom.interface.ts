@@ -2,6 +2,7 @@ export interface ChatRoomType {
   roomId: string;
   roomName: string;
   participants: string[];
+  type: string;
   messageHistory: MessageType[];
 }
 

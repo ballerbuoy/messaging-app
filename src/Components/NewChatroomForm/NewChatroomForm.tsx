@@ -1,55 +1,51 @@
-import React from "react";
-import { useState } from "react";
-import { reducerAction } from "../../App";
+import React, { useState } from "react";
+
 import { nanoid } from "nanoid";
 import { useMutation } from "../../Hooks/useMutation";
+import { ajaxClient } from "../../ajaxClient/ajaxClient";
+import { useUser } from "../../Contexts/user-context";
+
 import { ChatRoomType } from "../../Types/ChatRoom.interface";
+
 import "./NewChatroomForm.css";
 
 type Props = {
-  updateUser: (arg: reducerAction) => void;
   handleClose: () => void;
 };
 
-export function NewChatroomForm({ updateUser, handleClose }: Props) {
-  //pass dispatch from app
-  //onsubmit send the data to dispatch
+export function NewChatroomForm({ handleClose }: Props) {
+  const { state, dispatch } = useUser();
   const [channelName, setChannelName] = useState("");
-  const [channelType, setChannelType] = useState<"personal" | "group">(
-    "personal"
-  );
+
   const [participants, setParticipants] = useState("");
-  const { data, error, loading, executeFetch } = useMutation<ChatRoomType>({
-    url: "/chatroom/newChatRoom",
-    method: "POST",
-  });
+  const { mutate } = useMutation<ChatRoomType>((payload) =>
+    ajaxClient.post({ url: "/chatroom/", payload })
+  );
 
   const handleChannelNameChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setChannelName(e.target.value);
-  const handleChannelTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    if (e.target.value !== "personal" && e.target.value !== "group") {
-      return;
-    }
-    setChannelType(e.target.value);
-  };
+
   const handleParticipantsChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setParticipants(e.target.value);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    updateUser({
+    dispatch({
       type: "NEW_CHATROOM",
-      newChat: { roomId: nanoid(), roomName: channelName, type: channelType },
+      newChat: { roomId: nanoid(), roomName: channelName, type: "group" },
     });
     const payload = {
       roomId: nanoid(),
       roomName: channelName,
-      type: channelType,
-      participants: participants.split(", "),
+      type: "group",
+      participants: [...participants.split(", "), state.username],
     };
-    executeFetch(payload);
-    handleClose();
+    const addChatRoom = async () => {
+      await mutate(payload);
+      handleClose();
+    };
+    addChatRoom();
   };
 
   return (
@@ -62,15 +58,7 @@ export function NewChatroomForm({ updateUser, handleClose }: Props) {
         value={channelName}
         onChange={handleChannelNameChange}
       />
-      <label htmlFor="channel-type">Channel Type</label>
-      <select
-        id="channel-type"
-        value={channelType}
-        onChange={handleChannelTypeChange}
-      >
-        <option value="personal">Personal</option>
-        <option value="group">Group</option>
-      </select>
+
       <label htmlFor="participants">Participants</label>
       <input
         id="participants"
@@ -81,7 +69,7 @@ export function NewChatroomForm({ updateUser, handleClose }: Props) {
       />
 
       <button type="submit" className="create-button">
-        Create
+        Create Channel
       </button>
     </form>
   );

@@ -3,6 +3,7 @@
   position: absolute;
   flex-direction: column;
   color: #f1faee;
+  left: 285px;
 }
 
 .dropdown-item {

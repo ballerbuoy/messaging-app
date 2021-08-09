@@ -1,52 +1,38 @@
-import { useState } from "react";
-const BASE_URL = process.env.REACT_APP_SERVER_URL;
+import { useState, useCallback } from "react";
 
-type useMutationParams = {
-  url: string;
-  method: string;
-};
+type mutationFuncType = (...args: any[]) => Promise<Response>;
 
-export function useMutation<T>(params: useMutationParams) {
-  const { url, method } = params;
+export function useMutation<T>(mutationFunc: mutationFuncType) {
+  const [status, setStatus] = useState<
+    "idle" | "loading" | "error" | "success"
+  >("idle");
+  const [data, setData] = useState<T | undefined>(undefined);
+  const [error, setError] = useState<string | undefined>(undefined);
 
-  const [data, setData] = useState<T | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  const mutate = useCallback(
+    async (arg: any, mutationOptions: Object = {}) => {
+      try {
+        setStatus("loading");
 
-  const executeFetch = async (payload: Object | undefined = undefined) => {
-    const options = { method };
-    if (payload) {
-      Object.assign(options, {
-        body: JSON.stringify(payload),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-    }
-    if (error !== null) {
-      setError(null);
-    }
-    try {
-      let serverFailure = false;
-      setLoading(true);
-      const response = await fetch(BASE_URL + url, options);
-      if (!response.ok) {
-        serverFailure = true;
+        const response = await mutationFunc(arg);
+        const resDataJSON = await response.json();
+        const resData = JSON.parse(resDataJSON);
+        console.log(resData);
+
+        if (!response.ok) {
+          setStatus("error");
+          throw new Error(resData.error);
+        }
+
+        setStatus("success");
+        setData(resData);
+      } catch (error) {
+        setStatus("error");
+        setError(error.message);
       }
-      const dataJSON = await response.json();
-      const dataObj = JSON.parse(dataJSON);
-      if (!serverFailure) {
-        setData(dataObj);
-      } else {
-        throw new Error(dataObj.error);
-      }
-    } catch (error) {
-      setError(error);
-      setData(null);
-    } finally {
-      setLoading(false);
-    }
-  };
+    },
+    [mutationFunc]
+  );
 
-  return { data, error, loading, executeFetch };
+  return { data, error, status, mutate };
 }

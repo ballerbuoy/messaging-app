@@ -1,21 +1,25 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
+
 import { Messages } from "./Messages/Messages";
-import "./Main.css";
-import { MessageType } from "../../../Types/ChatRoom.interface";
-import { UserContext } from "../../../App";
 import { useMutation } from "../../../Hooks/useMutation";
 
+import { ajaxClient } from "../../../ajaxClient/ajaxClient";
+import { useUser } from "../../../Contexts/user-context";
+
+import { MessageType } from "../../../Types/ChatRoom.interface";
+
+import "./Main.css";
+
 type Props = {
-  selectedChatRoomId: string;
+  selectedChatRoomId: string | undefined;
 };
 
 export const Main = ({ selectedChatRoomId }: Props) => {
-  const { username } = useContext(UserContext);
+  const { state } = useUser();
   const [message, setMessage] = useState("");
-  const { loading, executeFetch } = useMutation<MessageType>({
-    url: `/chatroom/${selectedChatRoomId}`,
-    method: "POST",
-  });
+  const { status, mutate } = useMutation<MessageType>((payload) =>
+    ajaxClient.post({ url: `/chatroom/${selectedChatRoomId}`, payload })
+  );
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMessage(e.target.value);
@@ -26,13 +30,16 @@ export const Main = ({ selectedChatRoomId }: Props) => {
     const curTime = new Date();
     const timestamp = `${curTime.getHours()}:${curTime.getMinutes()}`;
 
-    executeFetch({ text: message, timestamp, sentBy: username });
+    mutate({ text: message, timestamp, sentBy: state.username });
     setMessage("");
   };
 
   return (
     <div className="main">
-      <Messages selectedChatRoomId={selectedChatRoomId} />
+      <Messages
+        selectedChatRoomId={selectedChatRoomId}
+        key={selectedChatRoomId}
+      />
       <div className="newMessage">
         <textarea
           value={message}
@@ -43,10 +50,10 @@ export const Main = ({ selectedChatRoomId }: Props) => {
         <button
           type="submit"
           onClick={handleClick}
-          disabled={loading}
+          disabled={status === "loading"}
           className="newMessage-send"
         >
-          {loading ? "Sending Message..." : "Send Message"}
+          {status === "loading" ? "Sending Message..." : "Send Message"}
         </button>
       </div>
     </div>
