@@ -22,13 +22,15 @@ export function MessageItem({ message }: Props) {
   return (
     data && (
       <div className="messageItem" key={message.messageId}>
-        <img
-          src={data.avatar}
-          alt={`${message.sentBy}-avatar`}
-          height="45px"
-          width="45px"
-          className="avatar"
-        />
+        {
+          <img
+            src={data.avatar}
+            alt={`${message.sentBy}-avatar`}
+            height="45px"
+            width="45px"
+            className="avatar"
+          />
+        }
         <div className="message">
           <div className="messageMeta">
             <span className="username">{message.sentBy}</span>

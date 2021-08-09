@@ -4,7 +4,11 @@ import "./Header.css";
 import { Dropdown } from "../../../Utils/Dropdown/Dropdown";
 import { useEffect } from "react";
 
-export function Header() {
+type Props = {
+  changeSelectedChatRoom: (arg: string) => void;
+};
+
+export function Header({ changeSelectedChatRoom }: Props) {
   const [query, setQuery] = useState("");
   const [result, setResult] = useState([]);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,7 +31,10 @@ export function Header() {
   }, [query]);
 
   const dropdown = result.length ? (
-    <Dropdown results={result.length > 5 ? result.slice(0, 5) : result} />
+    <Dropdown
+      results={result.length > 5 ? result.slice(0, 5) : result}
+      changeSelectedChatRoom={changeSelectedChatRoom}
+    />
   ) : null;
 
   return (

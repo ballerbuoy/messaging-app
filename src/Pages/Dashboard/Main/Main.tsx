@@ -1,7 +1,6 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import { Messages } from "./Messages/Messages";
 import "./Main.css";
-import { useFetch } from "../../../Hooks/useFetch";
 import { MessageType } from "../../../Types/ChatRoom.interface";
 import { UserContext } from "../../../App";
 import { useMutation } from "../../../Hooks/useMutation";

@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useMutation } from "../../Hooks/useMutation";
 import { UserInfo } from "../../Types/User.interface";
 import "./Login.css";
+import { reducerAction } from "../../App";
 
 type LoginProps = {
-  setToken: (arg: UserInfo) => void;
+  updateUser: (arg: reducerAction) => void;
 };
 
-export function Login({ setToken }: LoginProps) {
+export function Login({ updateUser }: LoginProps) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { data, error, loading, executeFetch } = useMutation<UserInfo>({
@@ -22,9 +23,9 @@ export function Login({ setToken }: LoginProps) {
 
   useEffect(() => {
     if (data) {
-      setToken(data);
+      updateUser({ type: "NEW_USER", newUser: data });
     }
-  }, [data, setToken]);
+  }, [data, updateUser]);
 
   const validationError = error ? (
     <div className="error">Invalid username and password combination!</div>

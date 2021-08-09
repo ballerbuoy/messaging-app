@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 const BASE_URL = process.env.REACT_APP_SERVER_URL;
 
 type useMutationParams = {
@@ -22,6 +22,9 @@ export function useMutation<T>(params: useMutationParams) {
           "Content-Type": "application/json",
         },
       });
+    }
+    if (error !== null) {
+      setError(null);
     }
     try {
       let serverFailure = false;
