@@ -1,0 +1,18 @@
+.add-teammate-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+label,
+input,
+select {
+  margin: 10px 0;
+}
+
+.create-button {
+  width: fit-content;
+  padding: 7px;
+  align-self: center;
+  box-shadow: 0;
+  border: 0;
+}

@@ -17,7 +17,6 @@ export function useMutation<T>(mutationFunc: mutationFuncType) {
         const response = await mutationFunc(arg);
         const resDataJSON = await response.json();
         const resData = JSON.parse(resDataJSON);
-        console.log(resData);
 
         if (!response.ok) {
           setStatus("error");

@@ -1,12 +1,9 @@
 import React, { useState } from "react";
 
-import { Header } from "./Header/Header";
 import { Main } from "./Main/Main";
-import { Sidebar } from "./Sidebar/Sidebar";
+import { DashboardLayout } from "../../Components/Layouts/Dashboard/DashboardLayout";
 
 import { useUser } from "../../Contexts/user-context";
-
-import "./Dashboard.css";
 
 export function Dashboard() {
   const { state } = useUser();
@@ -16,15 +13,11 @@ export function Dashboard() {
   );
 
   return (
-    <div className="wrapper">
-      <Header changeSelectedChatRoom={setSelectedChatRoom} />
-      <div className="main-wrapper">
-        <Sidebar
-          selectedChatRoom={selectedChatRoom}
-          changeSelectedChatRoom={setSelectedChatRoom}
-        />
-        <Main selectedChatRoomId={selectedChatRoom} />
-      </div>
-    </div>
+    <DashboardLayout
+      selectedChatRoom={selectedChatRoom}
+      setSelectedChatRoom={setSelectedChatRoom}
+    >
+      <Main selectedChatRoomId={selectedChatRoom} />
+    </DashboardLayout>
   );
 }
