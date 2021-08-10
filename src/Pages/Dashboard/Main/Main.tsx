@@ -11,7 +11,7 @@ import { MessageType } from "../../../Types/ChatRoom.interface";
 import "./Main.css";
 
 type Props = {
-  selectedChatRoomId: string | undefined;
+  selectedChatRoomId: string;
 };
 
 export const Main = ({ selectedChatRoomId }: Props) => {
@@ -50,7 +50,7 @@ export const Main = ({ selectedChatRoomId }: Props) => {
         <button
           type="submit"
           onClick={handleClick}
-          disabled={status === "loading"}
+          disabled={status === "loading" || message === ""}
           className="newMessage-send"
         >
           {status === "loading" ? "Sending Message..." : "Send Message"}

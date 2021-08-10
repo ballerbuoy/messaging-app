@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 
 import { MessageItem } from "./MessageItem/MessageItem";
 import { useQuery } from "../../../../Hooks/useQuery";
@@ -14,22 +14,30 @@ type Props = {
 };
 
 export const Messages = ({ selectedChatRoomId }: Props) => {
+  const divRef = useRef<HTMLDivElement>(null);
+
   const { data, error } = useQuery<ChatRoomType>({
     url: `/chatroom/${selectedChatRoomId}`,
     interval: 1000,
   });
 
+  useEffect(() => {
+    divRef.current?.scrollIntoView({ behavior: "smooth" });
+  });
+
   return (
     <div className="messages-wrapper">
-      <div className="messages-header">
-        {data ? <h3 className="title">{data.roomName}</h3> : null}
-        {data && data.type === "group" ? (
-          <button className="add-user">
-            <IoMdPersonAdd />
-          </button>
-        ) : null}
+      <div className="header-wrapper">
+        <div className="messages-header">
+          {data ? <h3 className="title">{data.roomName}</h3> : null}
+          {data && data.type === "group" ? (
+            <button className="add-user">
+              <IoMdPersonAdd />
+            </button>
+          ) : null}
+        </div>
+        <hr className="separator"></hr>
       </div>
-      <hr className="seperator"></hr>
       <div className="messages-body">
         {error ? (
           <h3>The chatroom currently does not exist on the server :( </h3>
@@ -39,6 +47,7 @@ export const Messages = ({ selectedChatRoomId }: Props) => {
               return <MessageItem message={message} key={message.messageId} />;
             })
           : null}
+        <div ref={divRef}></div>
       </div>
     </div>
   );
