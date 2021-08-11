@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { ajaxClient } from "../ajaxClient/ajaxClient";
 
 type useQueryParams = {
@@ -25,6 +25,32 @@ export const useQuery = <T>(params: useQueryParams) => {
     intervalState: 0,
   });
 
+  const executeFetch = useCallback(async () => {
+    try {
+      setState((prevState) => ({ ...prevState, isLoading: true }));
+      const res = await ajaxClient.get({ url });
+      const resDataJSON = await res.json();
+      const resData = JSON.parse(resDataJSON);
+      if (!res.ok) {
+        throw new Error(resData.error);
+      }
+
+      setState((prevState) => ({
+        ...prevState,
+        error: undefined,
+        data: resData,
+        isLoading: false,
+      }));
+    } catch (err) {
+      setState((prevState) => ({
+        ...prevState,
+        data: undefined,
+        isLoading: false,
+        error: err.message,
+      }));
+    }
+  }, [url]);
+
   useEffect(() => {
     let timerId: NodeJS.Timeout;
 
@@ -49,33 +75,13 @@ export const useQuery = <T>(params: useQueryParams) => {
       return;
     }
 
-    setState((prevState) => ({ ...prevState, isLoading: true }));
+    executeFetch();
+  }, [url, skip, state.intervalState, executeFetch]);
 
-    ajaxClient
-      .get({ url })
-      .then(async (res) => {
-        const resDataJSON = await res.json();
-        const resData = await JSON.parse(resDataJSON);
-        if (!res.ok) {
-          throw new Error(resData.error);
-        }
-
-        setState((prevState) => ({
-          ...prevState,
-          error: undefined,
-          data: resData,
-          isLoading: false,
-        }));
-      })
-      .catch((err) => {
-        setState((prevState) => ({
-          ...prevState,
-          data: undefined,
-          isLoading: false,
-          error: err.message,
-        }));
-      });
-  }, [url, skip, state.intervalState]);
-
-  return { data: state.data, error: state.error, isLoading: state.isLoading };
+  return {
+    data: state.data,
+    error: state.error,
+    isLoading: state.isLoading,
+    executeFetch,
+  };
 };

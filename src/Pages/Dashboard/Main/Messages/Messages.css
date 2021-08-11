@@ -1,6 +1,6 @@
 .messages-wrapper {
   overflow: scroll;
-  flex: 0 0 auto;
+  flex: 0 1 auto;
   height: 82vh;
   display: flex;
   flex-direction: column;
@@ -49,5 +49,10 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  flex: 1 0 auto;
+  flex: 1 1 auto;
+}
+
+.fetch-prev-btn,
+.error-msg {
+  align-self: center;
 }
