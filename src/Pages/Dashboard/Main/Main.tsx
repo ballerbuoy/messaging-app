@@ -28,10 +28,13 @@ export const Main = ({ selectedChatRoomId }: Props) => {
   const handleClick = (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const curTime = new Date();
-    const timestamp = `${curTime.getHours()}:${curTime.getMinutes()}`;
+    const timestamp = String(curTime.valueOf());
 
-    mutate({ text: message, timestamp, sentBy: state.username });
-    setMessage("");
+    const mutationOptions = { onSuccess: () => setMessage("") };
+    mutate(
+      { text: message, timestamp, sentBy: state.username },
+      mutationOptions
+    );
   };
 
   return (
@@ -56,6 +59,9 @@ export const Main = ({ selectedChatRoomId }: Props) => {
           {status === "loading" ? "Sending Message..." : "Send Message"}
         </button>
       </div>
+      {status === "error" ? (
+        <span className="error">Failed to send message</span>
+      ) : null}
     </div>
   );
 };

@@ -10,7 +10,7 @@ export function useMutation<T>(mutationFunc: mutationFuncType) {
   const [error, setError] = useState<string | undefined>(undefined);
 
   const mutate = useCallback(
-    async (arg: any, mutationOptions: Object = {}) => {
+    async (arg: any, mutationOptions = {}) => {
       try {
         setStatus("loading");
 
@@ -25,9 +25,11 @@ export function useMutation<T>(mutationFunc: mutationFuncType) {
 
         setStatus("success");
         setData(resData);
+        mutationOptions?.onSuccess?.();
       } catch (error) {
         setStatus("error");
         setError(error.message);
+        mutationOptions?.onError?.();
       }
     },
     [mutationFunc]
