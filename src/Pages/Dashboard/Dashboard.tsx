@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Main } from "./Main/Main";
 import { DashboardLayout } from "../../Components/Layouts/Dashboard/DashboardLayout";
 
-import { useUser } from "../../Contexts/user-context";
+import { useUser } from "../../Contexts/userContext";
 
 export function Dashboard() {
   const { state } = useUser();

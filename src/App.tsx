@@ -5,7 +5,7 @@ import { Dashboard } from "./Pages/Dashboard/Dashboard";
 
 import "./App.css";
 
-import { useUser } from "./Contexts/user-context";
+import { useUser } from "./Contexts/userContext";
 
 function App() {
   const { state } = useUser();

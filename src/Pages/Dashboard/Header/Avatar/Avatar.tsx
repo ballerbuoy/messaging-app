@@ -1,6 +1,6 @@
 import React from "react";
 
-import { useUser } from "../../../../Contexts/user-context";
+import { useUser } from "../../../../Contexts/userContext";
 
 import "./Avatar.css";
 

@@ -18,10 +18,7 @@ export function Modal({ handleClose, children, title }: ModalProps) {
             Close
           </button>
         </div>
-        <div className="modal-body">
-          {/* <NewChatroomForm handleClose={handleClose} /> */}
-          {children}
-        </div>
+        <div className="modal-body">{children}</div>
       </div>
     </div>
   );

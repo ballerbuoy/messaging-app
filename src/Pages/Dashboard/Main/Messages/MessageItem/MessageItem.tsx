@@ -2,6 +2,7 @@ import React from "react";
 
 import { useQuery } from "../../../../../Hooks/useQuery";
 import { getTime } from "../../../../../utils";
+import { MessageItemLoader } from "../../../../../Components/Loading/MessageItem/MessageItemLoader";
 
 import { MessageType } from "../../../../../Types/ChatRoom.interface";
 import { UserInfo } from "../../../../../Types/User.interface";
@@ -36,5 +37,7 @@ export function MessageItem({ message, style }: Props) {
         <div className="messageBody">{message.text}</div>
       </div>
     </div>
-  ) : null;
+  ) : (
+    <MessageItemLoader />
+  );
 }

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { UserInfo } from "../../Types/User.interface";
 
 import { useMutation } from "../../Hooks/useMutation";
-import { useUser } from "../../Contexts/user-context";
+import { useUser } from "../../Contexts/userContext";
 import { ajaxClient } from "../../ajaxClient/ajaxClient";
 
 import "./Login.css";
