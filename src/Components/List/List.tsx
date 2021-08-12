@@ -1,21 +1,21 @@
 import React from "react";
 import { useState, useCallback } from "react";
+
 import { Modal } from "../Modal/Modal";
-import { NewChatroomForm } from "../NewChatroomForm/NewChatroomForm";
+import { NewChatroomForm } from "../../Forms/NewChatroomForm/NewChatroomForm";
 import { AddTeammate } from "../../Forms/AddTeammate/AddTeammate";
+
+import { useModal } from "../../Hooks/useModal";
 
 import { IconContext } from "react-icons/lib";
 import { FiPlusSquare } from "react-icons/fi";
 
+import { ChatInfo } from "../../Types/User.interface";
+
 import "./List.css";
 
-type listItem = {
-  roomId: string;
-  roomName: string;
-};
-
 export interface Props {
-  list: listItem[];
+  list: ChatInfo[];
   title: string;
   changeSelectedChatRoom: React.Dispatch<React.SetStateAction<string>>;
   selectedChatRoom: string | undefined;
@@ -23,12 +23,7 @@ export interface Props {
 
 export function List(props: Props) {
   const { title, list, selectedChatRoom } = props;
-  const [modalVisible, setModalVisible] = useState(false);
-  const showModal = () => setModalVisible(true);
-  const hideModal = useCallback(
-    () => setModalVisible(false),
-    [setModalVisible]
-  );
+  const { modalVisible, showModal, hideModal } = useModal();
 
   const buttonText = title === "Channels" ? "Create new Group" : "Add Teammate";
   const form =

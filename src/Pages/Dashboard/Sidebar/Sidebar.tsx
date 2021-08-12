@@ -1,7 +1,10 @@
 import React from "react";
 
 import { List } from "../../../Components/List/List";
-import { useUser } from "../../../Contexts/user-context";
+import { useUser } from "../../../Contexts/userContext";
+import { useQuery } from "../../../Hooks/useQuery";
+
+import { ChatInfo } from "../../../Types/User.interface";
 
 import "./Sidebar.css";
 
@@ -10,9 +13,23 @@ type Props = {
   changeSelectedChatRoom: React.Dispatch<React.SetStateAction<string>>;
 };
 
+type ChatRoomsData = {
+  personalChatsSubscribed: ChatInfo[];
+  groupChatsSubscribed: ChatInfo[];
+};
+
 export function Sidebar({ selectedChatRoom, changeSelectedChatRoom }: Props) {
   const { state } = useUser();
-  const { personalChatsSubscribed, groupChatsSubscribed } = state;
+  const { data } = useQuery<ChatRoomsData>({
+    url: `/user/getRooms/${state.username}`,
+    interval: 1000,
+  });
+  const personalChatsSubscribed = data?.personalChatsSubscribed
+    ? data?.personalChatsSubscribed
+    : [];
+  const groupChatsSubscribed = data?.groupChatsSubscribed
+    ? data?.groupChatsSubscribed
+    : [];
 
   return (
     <div className="sidebar">

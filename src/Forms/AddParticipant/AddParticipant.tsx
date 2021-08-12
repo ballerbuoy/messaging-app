@@ -11,11 +11,16 @@ import "./AddParticipant.css";
 type Props = {
   handleClose: () => void;
   selectedRoomId: string;
+  setModalRequestState: (arg: any) => void;
 };
 
-export function AddParticipant({ handleClose, selectedRoomId }: Props) {
+export function AddParticipant({
+  handleClose,
+  selectedRoomId,
+  setModalRequestState,
+}: Props) {
   const [participant, setParticipant] = useState<string>("");
-  const { mutate } = useMutation<ChatRoomType>((payload) =>
+  const { status, error, mutate } = useMutation<ChatRoomType>((payload) =>
     ajaxClient.post({
       url: `/chatroom/addParticipant/${selectedRoomId}`,
       payload,
@@ -28,14 +33,27 @@ export function AddParticipant({ handleClose, selectedRoomId }: Props) {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const roomId = nanoid();
+
     const payload = {
-      roomId: roomId,
+      roomId: selectedRoomId,
       participant,
     };
     const addParticipant = async () => {
-      await mutate(payload);
-      handleClose();
+      const mutationOptions = {
+        onSuccess: () => {
+          setModalRequestState({
+            successful: true,
+            message: `${participant} was successfully added to `,
+          });
+          handleClose();
+        },
+        onError: () =>
+          setModalRequestState({
+            successful: false,
+            message: `Unable to add ${participant} to `,
+          }),
+      };
+      await mutate(payload, mutationOptions);
     };
     addParticipant();
   };
@@ -54,6 +72,7 @@ export function AddParticipant({ handleClose, selectedRoomId }: Props) {
       <button type="submit" className="create-button">
         Add Participant
       </button>
+      {status === "error" ? <div className="error">{error}</div> : null}
     </form>
   );
 }

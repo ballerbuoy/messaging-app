@@ -3,7 +3,8 @@ import React, { useRef, useEffect, useCallback } from "react";
 import { MessageItem } from "./MessageItem/MessageItem";
 import { Modal } from "../../../../Components/Modal/Modal";
 import { AddParticipant } from "../../../../Forms/AddParticipant/AddParticipant";
-import { VariableSizeList } from "react-window";
+import { Notification } from "../../../../Components/Notification/Notification";
+import { MessagesLoader } from "../../../../Components/Loading/Messages/MessagesLoader";
 
 import { useQuery } from "../../../../Hooks/useQuery";
 import { useModal } from "../../../../Hooks/useModal";
@@ -22,33 +23,9 @@ type Props = {
 
 export const Messages = ({ selectedChatRoomId }: Props) => {
   const bottomDivRef = useRef<HTMLDivElement>(null);
-  const messagesBodyRef = useRef<HTMLDivElement>(null);
-  const messagesBodyWidth = useRef(0);
   const [messages, setMessages] = useState<MessageType[]>([]);
 
-  const getItemSize = (index: number) => {
-    const charWidth = 7,
-      lineHeight = 18.5;
-
-    const width = document.body.getBoundingClientRect().width * 0.8 - 47;
-    const charsInLine = width / charWidth;
-    const noOfLines = messages[index].text.length / charsInLine + 1;
-    return Math.max(noOfLines * lineHeight + 23, 48);
-  };
-
-  const Row = useCallback(
-    ({ index, style }: { index: number; style: React.CSSProperties }) => (
-      <div style={style}>
-        <MessageItem
-          message={messages[index]}
-          key={messages[index].messageId}
-        />
-      </div>
-    ),
-    [messages]
-  );
-
-  const { data, error } = useQuery<ChatRoomType>({
+  const { data, error, isLoading } = useQuery<ChatRoomType>({
     url: `/chatroom/${selectedChatRoomId}`,
     skip: false,
   });
@@ -68,30 +45,42 @@ export const Messages = ({ selectedChatRoomId }: Props) => {
     interval: 1000,
   });
 
-  const fetchOlderMessages = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    await olderMessages.executeFetch();
-    console.log(olderMessages.data);
+  const handleScroll = async (e: React.UIEvent<HTMLDivElement>) => {
+    const { scrollTop, clientHeight, scrollHeight } = e.currentTarget;
+    if (scrollTop === 0) {
+      await olderMessages.executeFetch();
+    }
   };
 
   const { modalVisible, showModal, hideModal } = useModal();
+  const [modalRequestState, setModalRequestState] = useState({
+    successful: undefined,
+    message: "",
+  });
+
+  const handleNotificationClose = useCallback(() => {
+    setModalRequestState({ successful: undefined, message: "" });
+  }, [setModalRequestState]);
 
   const modal = (
     <Modal title="Add Participant" handleClose={hideModal}>
       <AddParticipant
         handleClose={hideModal}
         selectedRoomId={selectedChatRoomId}
+        setModalRequestState={setModalRequestState}
       />
     </Modal>
   );
 
   useEffect(() => {
-    bottomDivRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [newerMessages.data]);
+    const newerMessagesData = newerMessages.data;
+    if (newerMessagesData?.length) {
+      bottomDivRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [data, newerMessages.data]);
 
   useEffect(() => {
     if (data) {
-      console.log("messages updated");
       setMessages([...data.messageHistory]);
     }
   }, [data]);
@@ -110,55 +99,49 @@ export const Messages = ({ selectedChatRoomId }: Props) => {
     }
   }, [newerMessages.data]);
 
-  useEffect(() => {
-    messagesBodyWidth.current = messagesBodyRef.current
-      ? messagesBodyRef.current.clientWidth
-      : messagesBodyWidth.current;
-  }, [messagesBodyRef]);
-
   return (
-    <div className="messages-wrapper" ref={messagesBodyRef}>
-      <div className="header-wrapper">
-        <div className="messages-header">
-          {data ? <h3 className="title">{data.roomName}</h3> : null}
-          {data && data.type === "group" ? (
-            <button className="add-user" onClick={showModal}>
-              <IoMdPersonAdd />
-            </button>
-          ) : null}
-          {modalVisible ? modal : null}
+    <>
+      {isLoading ? <MessagesLoader /> : null}
+      <div className="messages-wrapper" onScroll={handleScroll}>
+        <div className="header-wrapper">
+          <div className="messages-header">
+            {data ? <h3 className="title">{data.roomName}</h3> : null}
+            {data && data.type === "group" ? (
+              <button className="add-user" onClick={showModal}>
+                <IoMdPersonAdd />
+              </button>
+            ) : null}
+            {modalVisible ? modal : null}
+          </div>
+          <hr className="separator"></hr>
         </div>
-        <hr className="separator"></hr>
+        <div className="messages-body">
+          {error ? (
+            <h3>The chatroom currently does not exist on the server :( </h3>
+          ) : null}
+          {olderMessages.error ? (
+            <span className="error error-msg">{olderMessages.error}</span>
+          ) : null}
+          {/* {!error ? (
+            <button
+              className="fetch-prev-btn"
+              onClick={fetchOlderMessages}
+              disabled={olderMessages.error ? true : false}
+            >
+              Fetch older messages
+            </button>
+          ) : null} */}
+          {messages.map((message) => {
+            return <MessageItem message={message} key={message.messageId} />;
+          })}
+          {modalRequestState.successful && data ? (
+            <Notification
+              onClose={handleNotificationClose}
+            >{`${modalRequestState.message}${data.roomName}`}</Notification>
+          ) : null}
+          <div ref={bottomDivRef}></div>
+        </div>
       </div>
-      <div className="messages-body">
-        {error ? (
-          <h3>The chatroom currently does not exist on the server :( </h3>
-        ) : null}
-        {olderMessages.error ? (
-          <span className="error error-msg">{olderMessages.error}</span>
-        ) : null}
-        {!error ? (
-          <button
-            className="fetch-prev-btn"
-            onClick={fetchOlderMessages}
-            disabled={olderMessages.error ? true : false}
-          >
-            Fetch older messages
-          </button>
-        ) : null}
-        {/* {messages.map((message) => {
-          return <MessageItem message={message} key={message.messageId} />;
-        })} */}
-        <VariableSizeList
-          height={500}
-          width={"100%"}
-          itemCount={messages.length}
-          itemSize={getItemSize}
-        >
-          {Row}
-        </VariableSizeList>
-        <div ref={bottomDivRef}></div>
-      </div>
-    </div>
+    </>
   );
 };

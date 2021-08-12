@@ -4,7 +4,7 @@ import { Messages } from "./Messages/Messages";
 import { useMutation } from "../../../Hooks/useMutation";
 
 import { ajaxClient } from "../../../ajaxClient/ajaxClient";
-import { useUser } from "../../../Contexts/user-context";
+import { useUser } from "../../../Contexts/userContext";
 
 import { MessageType } from "../../../Types/ChatRoom.interface";
 

@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { nanoid } from "nanoid";
 import { useMutation } from "../../Hooks/useMutation";
 import { ajaxClient } from "../../ajaxClient/ajaxClient";
-import { useUser } from "../../Contexts/user-context";
+import { useUser } from "../../Contexts/userContext";
 
 import { ChatRoomType } from "../../Types/ChatRoom.interface";
 
@@ -16,7 +16,7 @@ type Props = {
 export function AddTeammate({ handleClose }: Props) {
   const { state, dispatch } = useUser();
   const [teammate, setTeammate] = useState<string>("");
-  const { mutate } = useMutation<ChatRoomType>((payload) =>
+  const { status, error, mutate } = useMutation<ChatRoomType>((payload) =>
     ajaxClient.post({ url: "/chatroom/", payload })
   );
 
@@ -39,8 +39,12 @@ export function AddTeammate({ handleClose }: Props) {
       participants: [teammate, state.username],
     };
     const addChatRoom = async () => {
-      await mutate(payload);
-      handleClose();
+      const mutationOptions = {
+        onSuccess: () => {
+          handleClose();
+        },
+      };
+      await mutate(payload, mutationOptions);
     };
     addChatRoom();
   };
@@ -59,6 +63,7 @@ export function AddTeammate({ handleClose }: Props) {
       <button type="submit" className="create-button">
         Add Teammate
       </button>
+      {status === "error" ? <div className="error">{error}</div> : null}
     </form>
   );
 }

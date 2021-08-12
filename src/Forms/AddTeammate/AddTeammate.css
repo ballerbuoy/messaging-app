@@ -16,3 +16,8 @@ select {
   box-shadow: 0;
   border: 0;
 }
+
+.error {
+  color: #e63946;
+  margin-top: 10px;
+}
