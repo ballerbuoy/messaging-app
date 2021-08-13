@@ -123,15 +123,6 @@ export const Messages = ({ selectedChatRoomId }: Props) => {
           {olderMessages.error ? (
             <span className="error error-msg">{olderMessages.error}</span>
           ) : null}
-          {/* {!error ? (
-            <button
-              className="fetch-prev-btn"
-              onClick={fetchOlderMessages}
-              disabled={olderMessages.error ? true : false}
-            >
-              Fetch older messages
-            </button>
-          ) : null} */}
           {messages.map((message) => {
             return <MessageItem message={message} key={message.messageId} />;
           })}

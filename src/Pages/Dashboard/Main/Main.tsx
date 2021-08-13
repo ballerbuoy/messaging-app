@@ -21,12 +21,7 @@ export const Main = ({ selectedChatRoomId }: Props) => {
     ajaxClient.post({ url: `/chatroom/${selectedChatRoomId}`, payload })
   );
 
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setMessage(e.target.value);
-  };
-
-  const handleClick = (e: React.FormEvent<HTMLButtonElement>) => {
-    e.preventDefault();
+  const handleSendingMessage = () => {
     const curTime = new Date();
     const timestamp = String(curTime.valueOf());
 
@@ -35,6 +30,22 @@ export const Main = ({ selectedChatRoomId }: Props) => {
       { text: message, timestamp, sentBy: state.username },
       mutationOptions
     );
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setMessage(e.target.value);
+  };
+
+  const handleClick = (e: React.FormEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    handleSendingMessage();
+  };
+
+  const handleEnterPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleSendingMessage();
+    }
   };
 
   return (
@@ -49,6 +60,7 @@ export const Main = ({ selectedChatRoomId }: Props) => {
           onChange={handleChange}
           placeholder="Type a message"
           className="newMessage-input"
+          onKeyPress={handleEnterPress}
         />
         <button
           type="submit"
