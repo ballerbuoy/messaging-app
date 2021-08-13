@@ -46,8 +46,8 @@ export const Messages = ({ selectedChatRoomId }: Props) => {
   });
 
   const handleScroll = async (e: React.UIEvent<HTMLDivElement>) => {
-    const { scrollTop, clientHeight, scrollHeight } = e.currentTarget;
-    if (scrollTop === 0) {
+    const { scrollTop } = e.currentTarget;
+    if (scrollTop === 0 && !olderMessages.error) {
       await olderMessages.executeFetch();
     }
   };
@@ -77,9 +77,10 @@ export const Messages = ({ selectedChatRoomId }: Props) => {
     if (newerMessagesData?.length) {
       bottomDivRef.current?.scrollIntoView({ behavior: "smooth" });
     }
-  }, [data, newerMessages.data]);
+  }, [newerMessages.data]);
 
   useEffect(() => {
+    bottomDivRef.current?.scrollIntoView({ behavior: "smooth" });
     if (data) {
       setMessages([...data.messageHistory]);
     }

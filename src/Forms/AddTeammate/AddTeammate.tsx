@@ -14,7 +14,7 @@ type Props = {
 };
 
 export function AddTeammate({ handleClose }: Props) {
-  const { state, dispatch } = useUser();
+  const { state } = useUser();
   const [teammate, setTeammate] = useState<string>("");
   const { status, error, mutate } = useMutation<ChatRoomType>((payload) =>
     ajaxClient.post({ url: "/chatroom/", payload })
@@ -26,10 +26,6 @@ export function AddTeammate({ handleClose }: Props) {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const roomId = nanoid();
-    dispatch({
-      type: "NEW_CHATROOM",
-      newChat: { roomId: roomId, roomName: teammate, type: "personal" },
-    });
     const payload = {
       roomId: roomId,
       roomName: "",

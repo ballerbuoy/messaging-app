@@ -14,7 +14,7 @@ type Props = {
 };
 
 export function NewChatroomForm({ handleClose }: Props) {
-  const { state, dispatch } = useUser();
+  const { state } = useUser();
   const [channelName, setChannelName] = useState("");
 
   const [participants, setParticipants] = useState("");
@@ -31,10 +31,6 @@ export function NewChatroomForm({ handleClose }: Props) {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const roomId = nanoid();
-    dispatch({
-      type: "NEW_CHATROOM",
-      newChat: { roomId: roomId, roomName: channelName, type: "group" },
-    });
     const payload = {
       roomId: roomId,
       roomName: channelName,

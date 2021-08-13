@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 
-import { nanoid } from "nanoid";
 import { useMutation } from "../../Hooks/useMutation";
 import { ajaxClient } from "../../ajaxClient/ajaxClient";
 

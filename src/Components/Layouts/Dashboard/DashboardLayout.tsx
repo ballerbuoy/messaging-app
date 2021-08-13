@@ -1,31 +1,20 @@
-import React, { Dispatch, SetStateAction } from "react";
-
-import { Header } from "../../../Pages/Dashboard/Header/Header";
-import { Sidebar } from "../../../Pages/Dashboard/Sidebar/Sidebar";
+import React from "react";
 
 import "./DashboardLayout.css";
 
 type DashboardProps = {
-  children: React.ReactNode;
-  selectedChatRoom: string;
-  // setSelectedChatRoom: (arg: string) => void;
-  setSelectedChatRoom: Dispatch<SetStateAction<string>>;
+  header: React.ReactNode;
+  leftSidebar: React.ReactNode;
+  main: React.ReactNode;
 };
 
-export function DashboardLayout({
-  children,
-  selectedChatRoom,
-  setSelectedChatRoom,
-}: DashboardProps) {
+export function DashboardLayout({ header, leftSidebar, main }: DashboardProps) {
   return (
     <div className="wrapper">
-      <Header changeSelectedChatRoom={setSelectedChatRoom} />
+      {header}
       <div className="main-wrapper">
-        <Sidebar
-          selectedChatRoom={selectedChatRoom}
-          changeSelectedChatRoom={setSelectedChatRoom}
-        />
-        {children}
+        {leftSidebar}
+        {main}
       </div>
     </div>
   );

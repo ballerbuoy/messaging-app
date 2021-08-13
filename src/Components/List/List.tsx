@@ -1,5 +1,4 @@
 import React from "react";
-import { useState, useCallback } from "react";
 
 import { Modal } from "../Modal/Modal";
 import { NewChatroomForm } from "../../Forms/NewChatroomForm/NewChatroomForm";
