@@ -7,12 +7,12 @@ import { Notification } from "../../../../Components/Notification/Notification";
 import { MessagesLoader } from "../../../../Components/Loading/Messages/MessagesLoader";
 
 import { useQuery } from "../../../../Hooks/useQuery";
-import { useModal } from "../../../../Hooks/useModal";
+import { useVisibilityToggle } from "../../../../Hooks/useVisibilityToggle";
 
 import { IoMdPersonAdd } from "react-icons/io";
 
-import { ChatRoomType } from "../../../../Types/ChatRoom.interface";
-import { MessageType } from "../../../../Types/ChatRoom.interface";
+import { ChatRoomType } from "../../../../types/ChatRoom.interface";
+import { MessageType } from "../../../../types/ChatRoom.interface";
 
 import "./Messages.css";
 import { useState } from "react";
@@ -52,7 +52,7 @@ export const Messages = ({ selectedChatRoomId }: Props) => {
     }
   };
 
-  const { modalVisible, showModal, hideModal } = useModal();
+  const { isVisible, show, hide } = useVisibilityToggle();
   const [modalRequestState, setModalRequestState] = useState({
     successful: undefined,
     message: "",
@@ -63,9 +63,9 @@ export const Messages = ({ selectedChatRoomId }: Props) => {
   }, [setModalRequestState]);
 
   const modal = (
-    <Modal title="Add Participant" handleClose={hideModal}>
+    <Modal title="Add Participant" handleClose={hide}>
       <AddParticipant
-        handleClose={hideModal}
+        handleClose={hide}
         selectedRoomId={selectedChatRoomId}
         setModalRequestState={setModalRequestState}
       />
@@ -81,6 +81,7 @@ export const Messages = ({ selectedChatRoomId }: Props) => {
 
   useEffect(() => {
     if (data) {
+      console.log("SCROLL TO BOTTOM");
       bottomDivRef.current?.scrollIntoView({ behavior: "smooth" });
       setMessages([...data.messageHistory]);
     }
@@ -108,11 +109,11 @@ export const Messages = ({ selectedChatRoomId }: Props) => {
           <div className="messages-header">
             {data ? <h3 className="title">{data.roomName}</h3> : null}
             {data && data.type === "group" ? (
-              <button className="add-user" onClick={showModal}>
+              <button className="add-user" onClick={show}>
                 <IoMdPersonAdd />
               </button>
             ) : null}
-            {modalVisible ? modal : null}
+            {isVisible ? modal : null}
           </div>
           <hr className="separator"></hr>
         </div>

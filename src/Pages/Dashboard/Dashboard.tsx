@@ -8,10 +8,10 @@ import { Sidebar } from "./Sidebar/Sidebar";
 import { useUser } from "../../Contexts/userContext";
 
 export function Dashboard() {
-  const { state } = useUser();
+  const { user } = useUser();
 
   const [selectedChatRoom, setSelectedChatRoom] = useState<string>(
-    state.personalChatsSubscribed[0].roomId
+    user.personalChatsSubscribed[0].roomId
   );
 
   return (

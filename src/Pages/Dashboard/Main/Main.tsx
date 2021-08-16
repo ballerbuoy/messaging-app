@@ -6,7 +6,9 @@ import { useMutation } from "../../../Hooks/useMutation";
 import { ajaxClient } from "../../../ajaxClient/ajaxClient";
 import { useUser } from "../../../Contexts/userContext";
 
-import { MessageType } from "../../../Types/ChatRoom.interface";
+import { STATUS } from "../../../constants";
+
+import { MessageType } from "../../../types/ChatRoom.interface";
 
 import "./Main.css";
 
@@ -15,7 +17,7 @@ type Props = {
 };
 
 export const Main = ({ selectedChatRoomId }: Props) => {
-  const { state } = useUser();
+  const { user } = useUser();
   const [message, setMessage] = useState("");
   const { status, mutate } = useMutation<MessageType>((payload) =>
     ajaxClient.post({ url: `/chatroom/${selectedChatRoomId}`, payload })
@@ -27,7 +29,7 @@ export const Main = ({ selectedChatRoomId }: Props) => {
 
     const mutationOptions = { onSuccess: () => setMessage("") };
     mutate(
-      { text: message, timestamp, sentBy: state.username },
+      { text: message, timestamp, sentBy: user.username },
       mutationOptions
     );
   };
@@ -65,13 +67,13 @@ export const Main = ({ selectedChatRoomId }: Props) => {
         <button
           type="submit"
           onClick={handleClick}
-          disabled={status === "loading" || message === ""}
+          disabled={status === STATUS.LOADING || message === ""}
           className="newMessage-send"
         >
-          {status === "loading" ? "Sending Message..." : "Send Message"}
+          {status === STATUS.LOADING ? "Sending Message..." : "Send Message"}
         </button>
       </div>
-      {status === "error" ? (
+      {status === STATUS.ERROR ? (
         <span className="error">Failed to send message</span>
       ) : null}
     </div>

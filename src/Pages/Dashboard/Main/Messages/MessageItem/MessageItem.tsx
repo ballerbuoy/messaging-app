@@ -2,10 +2,9 @@ import React from "react";
 
 import { useQuery } from "../../../../../Hooks/useQuery";
 import { getTime } from "../../../../../utils";
-import { MessageItemLoader } from "../../../../../Components/Loading/MessageItem/MessageItemLoader";
 
-import { MessageType } from "../../../../../Types/ChatRoom.interface";
-import { UserInfo } from "../../../../../Types/User.interface";
+import { MessageType } from "../../../../../types/ChatRoom.interface";
+import { UserInfo } from "../../../../../types/User.interface";
 
 import "./MessageItem.css";
 
@@ -19,15 +18,19 @@ export function MessageItem({ message, style }: Props) {
     url: `/user/${message.sentBy}`,
   });
 
-  return data ? (
+  return (
     <div className="messageItem">
-      <img
-        src={data.avatar}
-        alt={`${message.sentBy}-avatar`}
-        height="45px"
-        width="45px"
-        className="avatar-message-item"
-      />
+      {data ? (
+        <img
+          src={data.avatar}
+          alt={`${message.sentBy}-avatar`}
+          height="45px"
+          width="45px"
+          className="avatar-message-item"
+        />
+      ) : (
+        <div className="loading-avatar"></div>
+      )}
 
       <div className="message">
         <div className="messageMeta">
@@ -37,7 +40,5 @@ export function MessageItem({ message, style }: Props) {
         <div className="messageBody">{message.text}</div>
       </div>
     </div>
-  ) : (
-    <MessageItemLoader />
   );
 }

@@ -3,7 +3,9 @@ import React, { useState } from "react";
 import { useMutation } from "../../Hooks/useMutation";
 import { ajaxClient } from "../../ajaxClient/ajaxClient";
 
-import { ChatRoomType } from "../../Types/ChatRoom.interface";
+import { STATUS } from "../../constants";
+
+import { ChatRoomType } from "../../types/ChatRoom.interface";
 
 import "./AddParticipant.css";
 
@@ -71,7 +73,7 @@ export function AddParticipant({
       <button type="submit" className="create-button">
         Add Participant
       </button>
-      {status === "error" ? <div className="error">{error}</div> : null}
+      {status === STATUS.ERROR ? <div className="error">{error}</div> : null}
     </form>
   );
 }

@@ -5,7 +5,9 @@ import { useMutation } from "../../Hooks/useMutation";
 import { ajaxClient } from "../../ajaxClient/ajaxClient";
 import { useUser } from "../../Contexts/userContext";
 
-import { ChatRoomType } from "../../Types/ChatRoom.interface";
+import { STATUS } from "../../constants";
+
+import { ChatRoomType } from "../../types/ChatRoom.interface";
 
 import "./AddTeammate.css";
 
@@ -15,7 +17,7 @@ type Props = {
 };
 
 export function AddTeammate({ handleClose, setModalRequestState }: Props) {
-  const { state } = useUser();
+  const { user } = useUser();
   const [teammate, setTeammate] = useState<string>("");
   const { status, error, mutate } = useMutation<ChatRoomType>((payload) =>
     ajaxClient.post({ url: "/chatroom/", payload })
@@ -31,9 +33,9 @@ export function AddTeammate({ handleClose, setModalRequestState }: Props) {
       roomId: roomId,
       roomName: "",
       type: "personal",
-      creator: state.username,
+      creator: user.username,
       added: teammate,
-      participants: [teammate, state.username],
+      participants: [teammate, user.username],
     };
     const addChatRoom = async () => {
       const mutationOptions = {
@@ -69,7 +71,7 @@ export function AddTeammate({ handleClose, setModalRequestState }: Props) {
       <button type="submit" className="create-button">
         Add Teammate
       </button>
-      {status === "error" ? <div className="error">{error}</div> : null}
+      {status === STATUS.ERROR ? <div className="error">{error}</div> : null}
     </form>
   );
 }

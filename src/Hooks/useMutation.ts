@@ -1,10 +1,15 @@
 import { useState, useCallback } from "react";
 
+import { STATUS } from "../constants";
+
 type mutationFuncType = (...args: any[]) => Promise<Response>;
 
 export function useMutation<T>(mutationFunc: mutationFuncType) {
   const [status, setStatus] = useState<
-    "idle" | "loading" | "error" | "success"
+    | typeof STATUS.IDLE
+    | typeof STATUS.LOADING
+    | typeof STATUS.ERROR
+    | typeof STATUS.SUCCESS
   >("idle");
   const [data, setData] = useState<T | undefined>(undefined);
   const [error, setError] = useState<string | undefined>(undefined);
@@ -12,22 +17,22 @@ export function useMutation<T>(mutationFunc: mutationFuncType) {
   const mutate = useCallback(
     async (arg: any, mutationOptions = {}) => {
       try {
-        setStatus("loading");
+        setStatus(STATUS.LOADING);
 
         const response = await mutationFunc(arg);
         const resDataJSON = await response.json();
         const resData = JSON.parse(resDataJSON);
 
         if (!response.ok) {
-          setStatus("error");
+          setStatus(STATUS.ERROR);
           throw new Error(resData.error);
         }
 
-        setStatus("success");
+        setStatus(STATUS.SUCCESS);
         setData(resData);
         mutationOptions?.onSuccess?.();
       } catch (error) {
-        setStatus("error");
+        setStatus(STATUS.ERROR);
         setError(error.message);
         mutationOptions?.onError?.();
       }

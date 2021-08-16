@@ -5,7 +5,7 @@ import { useMutation } from "../../Hooks/useMutation";
 import { ajaxClient } from "../../ajaxClient/ajaxClient";
 import { useUser } from "../../Contexts/userContext";
 
-import { ChatRoomType } from "../../Types/ChatRoom.interface";
+import { ChatRoomType } from "../../types/ChatRoom.interface";
 
 import "./NewChatroomForm.css";
 
@@ -15,8 +15,8 @@ type Props = {
 };
 
 export function NewChatroomForm({ handleClose, setModalRequestState }: Props) {
-  const { state } = useUser();
-  const [channelName, setChannelName] = useState("");
+  const { user } = useUser();
+  const [chatroomName, setChatroomName] = useState("");
 
   const [participants, setParticipants] = useState("");
   const { mutate } = useMutation<ChatRoomType>((payload) =>
@@ -24,7 +24,7 @@ export function NewChatroomForm({ handleClose, setModalRequestState }: Props) {
   );
 
   const handleChannelNameChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setChannelName(e.target.value);
+    setChatroomName(e.target.value);
 
   const handleParticipantsChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setParticipants(e.target.value);
@@ -34,23 +34,23 @@ export function NewChatroomForm({ handleClose, setModalRequestState }: Props) {
     const roomId = nanoid();
     const payload = {
       roomId: roomId,
-      roomName: channelName,
+      roomName: chatroomName,
       type: "group",
-      participants: [...participants.split(", "), state.username],
+      participants: [...participants.split(", "), user.username],
     };
     const addChatRoom = async () => {
       const mutationOptions = {
         onSuccess: () => {
           setModalRequestState({
             successful: true,
-            message: `${channelName} group was successfully created`,
+            message: `${chatroomName} group was successfully created`,
           });
           handleClose();
         },
         onError: () =>
           setModalRequestState({
             successful: false,
-            message: `Unable to create ${channelName} group`,
+            message: `Unable to create ${chatroomName} group`,
           }),
       };
       await mutate(payload, mutationOptions);
@@ -60,12 +60,12 @@ export function NewChatroomForm({ handleClose, setModalRequestState }: Props) {
 
   return (
     <form className="new-chatroom-wrapper" onSubmit={handleSubmit}>
-      <label htmlFor="channel-name">Channel Name</label>
+      <label htmlFor="chatroom-name">Channel Name</label>
       <input
         type="text"
-        id="channel-name"
-        placeholder="channel name"
-        value={channelName}
+        id="chatroom-name"
+        placeholder="chatroom name"
+        value={chatroomName}
         onChange={handleChannelNameChange}
       />
 

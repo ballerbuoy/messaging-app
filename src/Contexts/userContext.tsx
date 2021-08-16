@@ -1,6 +1,11 @@
-import React, { useReducer, createContext, Dispatch, useContext } from "react";
+import React, {
+  useReducer,
+  createContext,
+  useContext,
+  useCallback,
+} from "react";
 
-import { UserInfo } from "../Types/User.interface";
+import { UserInfo } from "../types/User.interface";
 
 type reducerAction = {
   type: string;
@@ -21,7 +26,7 @@ const initialValue = {
 };
 
 const UserContext = createContext<
-  { state: UserInfo; dispatch: Dispatch<reducerAction> } | undefined
+  { user: UserInfo; createNewUser: (arg: UserInfo) => void } | undefined
 >(undefined);
 
 const userReducer = (prevState: UserInfo, action: reducerAction) => {
@@ -65,9 +70,19 @@ const userReducer = (prevState: UserInfo, action: reducerAction) => {
   }
 };
 
+//TODO: createNewUser and all other structure in useUser
+
 const UserProvider = ({ children }: UserProviderProps) => {
   const [state, dispatch] = useReducer(userReducer, initialValue);
-  const value = { state, dispatch };
+
+  const createNewUser = useCallback((newUser: UserInfo) => {
+    dispatch({ type: "NEW_USER", newUser });
+  }, []);
+
+  const value = {
+    user: state,
+    createNewUser,
+  };
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };

@@ -5,12 +5,12 @@ import { Notification } from "../Notification/Notification";
 import { NewChatroomForm } from "../../Forms/NewChatroomForm/NewChatroomForm";
 import { AddTeammate } from "../../Forms/AddTeammate/AddTeammate";
 
-import { useModal } from "../../Hooks/useModal";
+import { useVisibilityToggle } from "../../Hooks/useVisibilityToggle";
 
 import { IconContext } from "react-icons/lib";
 import { FiPlusSquare } from "react-icons/fi";
 
-import { ChatInfo } from "../../Types/User.interface";
+import { ChatInfo } from "../../types/User.interface";
 
 import "./List.css";
 
@@ -23,7 +23,7 @@ export interface Props {
 
 export function List(props: Props) {
   const { title, list, selectedChatRoom } = props;
-  const { modalVisible, showModal, hideModal } = useModal();
+  const { isVisible, show, hide } = useVisibilityToggle();
 
   const [modalRequestState, setModalRequestState] = useState({
     successful: undefined,
@@ -38,17 +38,17 @@ export function List(props: Props) {
   const form =
     title === "Channels" ? (
       <NewChatroomForm
-        handleClose={hideModal}
+        handleClose={hide}
         setModalRequestState={setModalRequestState}
       />
     ) : (
       <AddTeammate
-        handleClose={hideModal}
+        handleClose={hide}
         setModalRequestState={setModalRequestState}
       />
     );
   const modal = (
-    <Modal title={buttonText} handleClose={hideModal}>
+    <Modal title={buttonText} handleClose={hide}>
       {form}
     </Modal>
   );
@@ -71,7 +71,7 @@ export function List(props: Props) {
           </div>
         );
       })}
-      <button className="new-chatroom" onClick={showModal}>
+      <button className="new-chatroom" onClick={show}>
         <div className="button-icon-wrapper">
           <IconContext.Provider value={{ style: { marginRight: "5px" } }}>
             <FiPlusSquare />
@@ -79,7 +79,7 @@ export function List(props: Props) {
           {buttonText}
         </div>
       </button>
-      {modalVisible ? modal : null}
+      {isVisible ? modal : null}
       {modalRequestState.successful ? (
         <Notification
           onClose={handleNotificationClose}

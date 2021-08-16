@@ -7,6 +7,6 @@ import "./Avatar.css";
 export interface Props {}
 
 export function Avatar(props: Props) {
-  const { state } = useUser();
-  return <img src={state.avatar} alt="user-avatar" className="avatar" />;
+  const { user } = useUser();
+  return <img src={user.avatar} alt="user-avatar" className="avatar" />;
 }

@@ -8,8 +8,8 @@ import "./App.css";
 import { useUser } from "./Contexts/userContext";
 
 function App() {
-  const { state } = useUser();
-  if (!state.username) {
+  const { user } = useUser();
+  if (!user.username) {
     return <Login />;
   }
 

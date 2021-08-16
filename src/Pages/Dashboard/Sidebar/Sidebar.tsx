@@ -4,7 +4,7 @@ import { List } from "../../../Components/List/List";
 import { useUser } from "../../../Contexts/userContext";
 import { useQuery } from "../../../Hooks/useQuery";
 
-import { ChatInfo } from "../../../Types/User.interface";
+import { ChatInfo } from "../../../types/User.interface";
 
 import "./Sidebar.css";
 
@@ -19,9 +19,9 @@ type ChatRoomsData = {
 };
 
 export function Sidebar({ selectedChatRoom, changeSelectedChatRoom }: Props) {
-  const { state } = useUser();
+  const { user } = useUser();
   const { data } = useQuery<ChatRoomsData>({
-    url: `/user/getRooms/${state.username}`,
+    url: `/user/getRooms/${user.username}`,
     interval: 1000,
   });
   const personalChatsSubscribed = data?.personalChatsSubscribed

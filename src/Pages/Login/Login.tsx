@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 
-import { UserInfo } from "../../Types/User.interface";
+import { UserInfo } from "../../types/User.interface";
 
 import { useMutation } from "../../Hooks/useMutation";
 import { useUser } from "../../Contexts/userContext";
 import { ajaxClient } from "../../ajaxClient/ajaxClient";
+
+import { STATUS } from "../../constants";
 
 import "./Login.css";
 
@@ -15,7 +17,7 @@ export function Login() {
     ajaxClient.post({ url: "/login", payload })
   );
 
-  const { dispatch } = useUser();
+  const { createNewUser } = useUser();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -25,12 +27,12 @@ export function Login() {
   //TODO: pass options to mutate onSuccess, onError
   useEffect(() => {
     if (data) {
-      dispatch({ type: "NEW_USER", newUser: data });
+      createNewUser(data);
     }
-  }, [data, dispatch]);
+  }, [data, createNewUser]);
 
   const validationError =
-    status === "error" ? (
+    status === STATUS.ERROR ? (
       <div className="error">Invalid username and password combination!</div>
     ) : null;
 
@@ -60,11 +62,11 @@ export function Login() {
         <div>
           <button
             type="submit"
-            disabled={status === "loading"}
+            disabled={status === STATUS.LOADING}
             className="login-button"
           >
             {" "}
-            {status === "loading" ? "Logging in..." : "Log In"}
+            {status === STATUS.LOADING ? "Logging in..." : "Log In"}
           </button>
         </div>
       </form>
