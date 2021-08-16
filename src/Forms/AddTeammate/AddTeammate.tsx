@@ -11,9 +11,10 @@ import "./AddTeammate.css";
 
 type Props = {
   handleClose: () => void;
+  setModalRequestState: (arg: any) => void;
 };
 
-export function AddTeammate({ handleClose }: Props) {
+export function AddTeammate({ handleClose, setModalRequestState }: Props) {
   const { state } = useUser();
   const [teammate, setTeammate] = useState<string>("");
   const { status, error, mutate } = useMutation<ChatRoomType>((payload) =>
@@ -37,8 +38,17 @@ export function AddTeammate({ handleClose }: Props) {
     const addChatRoom = async () => {
       const mutationOptions = {
         onSuccess: () => {
+          setModalRequestState({
+            successful: true,
+            message: `${teammate} was successfully added to your chats `,
+          });
           handleClose();
         },
+        onError: () =>
+          setModalRequestState({
+            successful: false,
+            message: `User with username: '${teammate}' does not exist`,
+          }),
       };
       await mutate(payload, mutationOptions);
     };

@@ -80,8 +80,8 @@ export const Messages = ({ selectedChatRoomId }: Props) => {
   }, [newerMessages.data]);
 
   useEffect(() => {
-    bottomDivRef.current?.scrollIntoView({ behavior: "smooth" });
     if (data) {
+      bottomDivRef.current?.scrollIntoView({ behavior: "smooth" });
       setMessages([...data.messageHistory]);
     }
   }, [data]);

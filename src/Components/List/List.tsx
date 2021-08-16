@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState, useCallback } from "react";
 
 import { Modal } from "../Modal/Modal";
+import { Notification } from "../Notification/Notification";
 import { NewChatroomForm } from "../../Forms/NewChatroomForm/NewChatroomForm";
 import { AddTeammate } from "../../Forms/AddTeammate/AddTeammate";
 
@@ -24,12 +25,27 @@ export function List(props: Props) {
   const { title, list, selectedChatRoom } = props;
   const { modalVisible, showModal, hideModal } = useModal();
 
+  const [modalRequestState, setModalRequestState] = useState({
+    successful: undefined,
+    message: "",
+  });
+
+  const handleNotificationClose = useCallback(() => {
+    setModalRequestState({ successful: undefined, message: "" });
+  }, [setModalRequestState]);
+
   const buttonText = title === "Channels" ? "Create new Group" : "Add Teammate";
   const form =
     title === "Channels" ? (
-      <NewChatroomForm handleClose={hideModal} />
+      <NewChatroomForm
+        handleClose={hideModal}
+        setModalRequestState={setModalRequestState}
+      />
     ) : (
-      <AddTeammate handleClose={hideModal} />
+      <AddTeammate
+        handleClose={hideModal}
+        setModalRequestState={setModalRequestState}
+      />
     );
   const modal = (
     <Modal title={buttonText} handleClose={hideModal}>
@@ -64,6 +80,11 @@ export function List(props: Props) {
         </div>
       </button>
       {modalVisible ? modal : null}
+      {modalRequestState.successful ? (
+        <Notification
+          onClose={handleNotificationClose}
+        >{`${modalRequestState.message}`}</Notification>
+      ) : null}
     </div>
   );
 }

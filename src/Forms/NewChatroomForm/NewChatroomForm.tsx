@@ -11,9 +11,10 @@ import "./NewChatroomForm.css";
 
 type Props = {
   handleClose: () => void;
+  setModalRequestState: (arg: any) => void;
 };
 
-export function NewChatroomForm({ handleClose }: Props) {
+export function NewChatroomForm({ handleClose, setModalRequestState }: Props) {
   const { state } = useUser();
   const [channelName, setChannelName] = useState("");
 
@@ -38,8 +39,21 @@ export function NewChatroomForm({ handleClose }: Props) {
       participants: [...participants.split(", "), state.username],
     };
     const addChatRoom = async () => {
-      await mutate(payload);
-      handleClose();
+      const mutationOptions = {
+        onSuccess: () => {
+          setModalRequestState({
+            successful: true,
+            message: `${channelName} group was successfully created`,
+          });
+          handleClose();
+        },
+        onError: () =>
+          setModalRequestState({
+            successful: false,
+            message: `Unable to create ${channelName} group`,
+          }),
+      };
+      await mutate(payload, mutationOptions);
     };
     addChatRoom();
   };
