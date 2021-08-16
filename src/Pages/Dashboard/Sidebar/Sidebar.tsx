@@ -1,28 +1,35 @@
-import React, { useState } from "react";
-import { List } from "../../../Utils/List/List";
-import { reducerAction, UserContext } from "../../../App";
-import { useContext } from "react";
+import React from "react";
+
+import { List } from "../../../Components/List/List";
+import { useUser } from "../../../Contexts/userContext";
+import { useQuery } from "../../../Hooks/useQuery";
+
+import { ChatInfo } from "../../../types/User.interface";
+
 import "./Sidebar.css";
-import { Modal } from "./Modal/Modal";
-import { useCallback } from "react";
 
 type Props = {
   selectedChatRoom: string;
   changeSelectedChatRoom: React.Dispatch<React.SetStateAction<string>>;
-  updateUser: (arg: reducerAction) => void;
 };
 
-export function Sidebar({
-  selectedChatRoom,
-  changeSelectedChatRoom,
-  updateUser,
-}: Props) {
-  const { personalChatsSubscribed, groupChatsSubscribed } =
-    useContext(UserContext);
+type ChatRoomsData = {
+  personalChatsSubscribed: ChatInfo[];
+  groupChatsSubscribed: ChatInfo[];
+};
 
-  const [modalShow, setModalShow] = useState<boolean>(false);
-  const showModal = () => setModalShow(true);
-  const hideModal = useCallback(() => setModalShow(false), [setModalShow]);
+export function Sidebar({ selectedChatRoom, changeSelectedChatRoom }: Props) {
+  const { user } = useUser();
+  const { data } = useQuery<ChatRoomsData>({
+    url: `/user/getRooms/${user.username}`,
+    interval: 1000,
+  });
+  const personalChatsSubscribed = data?.personalChatsSubscribed
+    ? data?.personalChatsSubscribed
+    : [];
+  const groupChatsSubscribed = data?.groupChatsSubscribed
+    ? data?.groupChatsSubscribed
+    : [];
 
   return (
     <div className="sidebar">
@@ -40,12 +47,6 @@ export function Sidebar({
         list={groupChatsSubscribed}
       />
       <hr />
-      <button className="new-chatroom" onClick={showModal}>
-        Create New Chat Room
-      </button>
-      {modalShow ? (
-        <Modal handleClose={hideModal} updateUser={updateUser} />
-      ) : null}
     </div>
   );
 }

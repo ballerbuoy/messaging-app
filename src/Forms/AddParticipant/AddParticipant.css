@@ -1,0 +1,20 @@
+.add-participant-wrapper {
+  color: white;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+label,
+input,
+select {
+  margin: 10px 0;
+}
+
+.create-button {
+  width: fit-content;
+  padding: 7px;
+  align-self: center;
+  box-shadow: 0;
+  border: 0;
+}

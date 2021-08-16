@@ -1,35 +1,40 @@
 import React, { useState, useEffect } from "react";
+
+import { UserInfo } from "../../types/User.interface";
+
 import { useMutation } from "../../Hooks/useMutation";
-import { UserInfo } from "../../Types/User.interface";
+import { useUser } from "../../Contexts/userContext";
+import { ajaxClient } from "../../ajaxClient/ajaxClient";
+
+import { STATUS } from "../../constants";
+
 import "./Login.css";
-import { reducerAction } from "../../App";
 
-type LoginProps = {
-  updateUser: (arg: reducerAction) => void;
-};
-
-export function Login({ updateUser }: LoginProps) {
+export function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { data, error, loading, executeFetch } = useMutation<UserInfo>({
-    url: "/login",
-    method: "POST",
-  });
+  const { data, status, mutate } = useMutation<UserInfo>((payload) =>
+    ajaxClient.post({ url: "/login", payload })
+  );
+
+  const { createNewUser } = useUser();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    executeFetch({ username, password });
+    mutate({ username, password });
   };
 
+  //TODO: pass options to mutate onSuccess, onError
   useEffect(() => {
     if (data) {
-      updateUser({ type: "NEW_USER", newUser: data });
+      createNewUser(data);
     }
-  }, [data, updateUser]);
+  }, [data, createNewUser]);
 
-  const validationError = error ? (
-    <div className="error">Invalid username and password combination!</div>
-  ) : null;
+  const validationError =
+    status === STATUS.ERROR ? (
+      <div className="error">Invalid username and password combination!</div>
+    ) : null;
 
   return (
     <div className="login-wrapper">
@@ -55,9 +60,13 @@ export function Login({ updateUser }: LoginProps) {
         </label>
         {validationError}
         <div>
-          <button type="submit" disabled={loading} className="login-button">
+          <button
+            type="submit"
+            disabled={status === STATUS.LOADING}
+            className="login-button"
+          >
             {" "}
-            {loading ? "Logging in..." : "Log In"}
+            {status === STATUS.LOADING ? "Logging in..." : "Log In"}
           </button>
         </div>
       </form>

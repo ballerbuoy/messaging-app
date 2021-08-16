@@ -1,4 +1,4 @@
-.messageItem {
+.loading-messageItem {
   display: flex;
   padding: 2px;
   gap: 10px;
@@ -6,8 +6,7 @@
   margin-left: 8px;
 }
 
-.avatar-message-item,
-.loading-avatar {
+.loading-avatar-message-item {
   flex: 0 0 auto;
   height: 45px;
   width: 45px;
@@ -17,20 +16,33 @@
   background-color: #e2ece9;
 }
 
-.message {
+.loading-message {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
 }
 
-.username {
+.loading-username {
   display: inline-block;
   margin: 2px;
   font-weight: bold;
   font-size: larger;
   margin-right: 10px;
+  height: 24px;
+  width: 70px;
+  background-color: #e2ece9;
 }
 
-.timestamp {
+.loading-timestamp {
+  display: inline-block;
   font-size: small;
+  background-color: #e2ece9;
+  height: 16px;
+  width: 35px;
+}
+
+.loading-messageBody {
+  height: 40px;
+  width: 70vw;
+  background-color: #e2ece9;
 }

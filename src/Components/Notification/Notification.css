@@ -1,0 +1,29 @@
+.notification {
+  position: fixed;
+  bottom: 15vh;
+  left: 40vw;
+  background-color: #1d3557;
+  color: #f1faee;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: default;
+  animation: ease-in 0.7s;
+}
+
+.notification-close {
+  font-size: larger;
+  font-weight: bolder;
+  margin-left: 5px;
+  cursor: pointer;
+}
+
+@keyframes ease-in {
+  from {
+    bottom: 0;
+    opacity: 0;
+  }
+  to {
+    bottom: 15vh;
+    opacity: 1;
+  }
+}

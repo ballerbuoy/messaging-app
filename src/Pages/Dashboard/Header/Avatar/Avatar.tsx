@@ -1,10 +1,12 @@
-import React, { useContext } from "react";
-import { UserContext } from "../../../../App";
+import React from "react";
+
+import { useUser } from "../../../../Contexts/userContext";
+
 import "./Avatar.css";
 
 export interface Props {}
 
 export function Avatar(props: Props) {
-  const { avatar } = useContext(UserContext);
-  return <img src={avatar} alt="user-avatar" className="avatar" />;
+  const { user } = useUser();
+  return <img src={user.avatar} alt="user-avatar" className="avatar" />;
 }

@@ -1,4 +1,5 @@
 import React from "react";
+
 import "./Dropdown.css";
 
 type result = {
@@ -9,19 +10,22 @@ type result = {
 export interface Props {
   results: result[];
   changeSelectedChatRoom: (arg: string) => void;
+  id: string;
 }
 
 export function Dropdown(props: Props) {
-  const { results } = props;
+  const { results, id } = props;
   return (
-    <div className="dropdown">
+    <datalist className="dropdown" id={id}>
       {results.map((result) => {
         return (
-          <div className="dropdown-item" key={result.username}>
-            {`${result.username[0].toUpperCase()}${result.username.substr(1)}`}
-          </div>
+          <option
+            value={result.username}
+            key={result.username}
+            className="option"
+          />
         );
       })}
-    </div>
+    </datalist>
   );
 }

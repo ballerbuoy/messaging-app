@@ -10,15 +10,16 @@
   margin-left: auto;
   margin-right: auto;
   text-align: center;
+  position: relative;
 }
 
-.query-input {
-  background-color: #f1faee;
-  padding: 2px;
-  text-align: center;
-  width: 40%;
-}
-
-.query-input::placeholder {
-  text-align: center;
+.logo {
+  flex: 0 0 auto;
+  object-fit: cover;
+  height: 45px;
+  width: 45px;
+  border-radius: 5px;
+  padding: 5px;
+  align-self: flex-start;
+  margin-left: 10px;
 }
