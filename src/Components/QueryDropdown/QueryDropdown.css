@@ -3,6 +3,7 @@
   padding: 2px;
   text-align: center;
   width: 40%;
+  height: 20px;
 }
 
 .query-input::placeholder {

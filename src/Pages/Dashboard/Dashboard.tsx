@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 
-import { Main } from "./Main/Main";
-import { DashboardLayout } from "../../Components/Layouts/Dashboard/DashboardLayout";
-import { Header } from "./Header/Header";
-import { Sidebar } from "./Sidebar/Sidebar";
+import { Main } from "./main/Main";
+import { DashboardLayout } from "../../components/layouts/dashboard/DashboardLayout";
+import { Header } from "./header/Header";
+import { Sidebar } from "./sidebar/Sidebar";
 
-import { useUser } from "../../Contexts/userContext";
+import { useUser } from "../../contexts/userContext";
 
 export function Dashboard() {
   const { user } = useUser();

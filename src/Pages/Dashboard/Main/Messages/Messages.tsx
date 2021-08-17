@@ -1,13 +1,14 @@
 import React, { useRef, useEffect, useCallback } from "react";
 
-import { MessageItem } from "./MessageItem/MessageItem";
-import { Modal } from "../../../../Components/Modal/Modal";
-import { AddParticipant } from "../../../../Forms/AddParticipant/AddParticipant";
-import { Notification } from "../../../../Components/Notification/Notification";
-import { MessagesLoader } from "../../../../Components/Loading/Messages/MessagesLoader";
+import { MessageItem } from "./messageItem/MessageItem";
+import { Modal } from "../../../../components/modal/Modal";
+import { AddParticipant } from "../../../../forms/addParticipant/AddParticipant";
+import { Notification } from "../../../../components/notification/Notification";
+import { MessagesLoader } from "../../../../components/loading/messages/MessagesLoader";
+import { MultipleMessagesLoader } from "../../../../components/loading/multipleMessages/MultipleMessagesLoader";
 
-import { useQuery } from "../../../../Hooks/useQuery";
-import { useVisibilityToggle } from "../../../../Hooks/useVisibilityToggle";
+import { useQuery } from "../../../../hooks/useQuery";
+import { useVisibilityToggle } from "../../../../hooks/useVisibilityToggle";
 
 import { IoMdPersonAdd } from "react-icons/io";
 
@@ -81,7 +82,6 @@ export const Messages = ({ selectedChatRoomId }: Props) => {
 
   useEffect(() => {
     if (data) {
-      console.log("SCROLL TO BOTTOM");
       bottomDivRef.current?.scrollIntoView({ behavior: "smooth" });
       setMessages([...data.messageHistory]);
     }
@@ -103,38 +103,42 @@ export const Messages = ({ selectedChatRoomId }: Props) => {
 
   return (
     <>
-      {isLoading ? <MessagesLoader /> : null}
-      <div className="messages-wrapper" onScroll={handleScroll}>
-        <div className="header-wrapper">
-          <div className="messages-header">
-            {data ? <h3 className="title">{data.roomName}</h3> : null}
-            {data && data.type === "group" ? (
-              <button className="add-user" onClick={show}>
-                <IoMdPersonAdd />
-              </button>
-            ) : null}
-            {isVisible ? modal : null}
+      {isLoading ? (
+        <MessagesLoader />
+      ) : (
+        <div className="messages-wrapper" onScroll={handleScroll}>
+          <div className="header-wrapper">
+            <div className="messages-header">
+              {data ? <h3 className="title">{data.roomName}</h3> : null}
+              {data && data.type === "group" ? (
+                <button className="add-user" onClick={show}>
+                  <IoMdPersonAdd />
+                </button>
+              ) : null}
+              {isVisible ? modal : null}
+            </div>
+            <hr className="separator"></hr>
           </div>
-          <hr className="separator"></hr>
+          <div className="messages-body">
+            {error ? (
+              <h3>The chatroom currently does not exist on the server :( </h3>
+            ) : null}
+            {olderMessages.error ? (
+              <span className="error error-msg">{olderMessages.error}</span>
+            ) : null}
+            {olderMessages.isLoading ? <MultipleMessagesLoader /> : null}
+            {messages.map((message) => {
+              return <MessageItem message={message} key={message.messageId} />;
+            })}
+            {modalRequestState.successful && data ? (
+              <Notification
+                onClose={handleNotificationClose}
+              >{`${modalRequestState.message}${data.roomName}`}</Notification>
+            ) : null}
+            <div ref={bottomDivRef}></div>
+          </div>
         </div>
-        <div className="messages-body">
-          {error ? (
-            <h3>The chatroom currently does not exist on the server :( </h3>
-          ) : null}
-          {olderMessages.error ? (
-            <span className="error error-msg">{olderMessages.error}</span>
-          ) : null}
-          {messages.map((message) => {
-            return <MessageItem message={message} key={message.messageId} />;
-          })}
-          {modalRequestState.successful && data ? (
-            <Notification
-              onClose={handleNotificationClose}
-            >{`${modalRequestState.message}${data.roomName}`}</Notification>
-          ) : null}
-          <div ref={bottomDivRef}></div>
-        </div>
-      </div>
+      )}
     </>
   );
 };

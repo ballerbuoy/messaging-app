@@ -1,6 +1,6 @@
 import React from "react";
 
-import { useQuery } from "../../../../../Hooks/useQuery";
+import { useQuery } from "../../../../../hooks/useQuery";
 import { getTime } from "../../../../../utils";
 
 import { MessageType } from "../../../../../types/ChatRoom.interface";

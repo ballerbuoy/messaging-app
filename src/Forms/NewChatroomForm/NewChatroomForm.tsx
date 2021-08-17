@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 
 import { nanoid } from "nanoid";
-import { useMutation } from "../../Hooks/useMutation";
+import { useMutation } from "../../hooks/useMutation";
 import { ajaxClient } from "../../ajaxClient/ajaxClient";
-import { useUser } from "../../Contexts/userContext";
+import { useUser } from "../../contexts/userContext";
 
 import { ChatRoomType } from "../../types/ChatRoom.interface";
 

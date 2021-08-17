@@ -1,11 +1,11 @@
 import React, { useState, useCallback } from "react";
 
-import { Modal } from "../Modal/Modal";
-import { Notification } from "../Notification/Notification";
-import { NewChatroomForm } from "../../Forms/NewChatroomForm/NewChatroomForm";
-import { AddTeammate } from "../../Forms/AddTeammate/AddTeammate";
+import { Modal } from "../modal/Modal";
+import { Notification } from "../notification/Notification";
+import { NewChatroomForm } from "../../forms/newChatroomForm/NewChatroomForm";
+import { AddTeammate } from "../../forms/addTeammate/AddTeammate";
 
-import { useVisibilityToggle } from "../../Hooks/useVisibilityToggle";
+import { useVisibilityToggle } from "../../hooks/useVisibilityToggle";
 
 import { IconContext } from "react-icons/lib";
 import { FiPlusSquare } from "react-icons/fi";

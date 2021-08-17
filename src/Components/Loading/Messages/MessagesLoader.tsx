@@ -1,6 +1,6 @@
 import React from "react";
 
-import { MessageItemLoader } from "../MessageItem/MessageItemLoader";
+import { MessageItemLoader } from "../messageItem/MessageItemLoader";
 
 import "./MessagesLoader.css";
 

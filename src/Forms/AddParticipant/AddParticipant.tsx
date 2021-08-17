@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { useMutation } from "../../Hooks/useMutation";
+import { useMutation } from "../../hooks/useMutation";
 import { ajaxClient } from "../../ajaxClient/ajaxClient";
 
 import { STATUS } from "../../constants";

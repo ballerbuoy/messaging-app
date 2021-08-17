@@ -1,8 +1,8 @@
 import React from "react";
 
-import { List } from "../../../Components/List/List";
-import { useUser } from "../../../Contexts/userContext";
-import { useQuery } from "../../../Hooks/useQuery";
+import { List } from "../../../components/list/List";
+import { useUser } from "../../../contexts/userContext";
+import { useQuery } from "../../../hooks/useQuery";
 
 import { ChatInfo } from "../../../types/User.interface";
 

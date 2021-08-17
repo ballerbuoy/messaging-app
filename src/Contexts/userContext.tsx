@@ -4,6 +4,7 @@ import React, {
   useContext,
   useCallback,
 } from "react";
+import { Dispatch } from "react";
 
 import { UserInfo } from "../types/User.interface";
 
@@ -26,7 +27,7 @@ const initialValue = {
 };
 
 const UserContext = createContext<
-  { user: UserInfo; createNewUser: (arg: UserInfo) => void } | undefined
+  { state: UserInfo; dispatch: Dispatch<reducerAction> } | undefined
 >(undefined);
 
 const userReducer = (prevState: UserInfo, action: reducerAction) => {
@@ -65,23 +66,19 @@ const userReducer = (prevState: UserInfo, action: reducerAction) => {
       }
       return action.newUser;
 
+    case "RESET":
+      return initialValue;
     default:
       return initialValue;
   }
 };
 
-//TODO: createNewUser and all other structure in useUser
-
 const UserProvider = ({ children }: UserProviderProps) => {
   const [state, dispatch] = useReducer(userReducer, initialValue);
 
-  const createNewUser = useCallback((newUser: UserInfo) => {
-    dispatch({ type: "NEW_USER", newUser });
-  }, []);
-
   const value = {
-    user: state,
-    createNewUser,
+    state,
+    dispatch,
   };
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
@@ -92,7 +89,21 @@ const useUser = () => {
   if (context === undefined) {
     throw new Error("useUser must be used within a UserProvider");
   }
-  return context;
+
+  const { state, dispatch } = context;
+
+  const createNewUser = useCallback(
+    (newUser: UserInfo) => {
+      dispatch({ type: "NEW_USER", newUser });
+    },
+    [dispatch]
+  );
+
+  const reset = useCallback(() => {
+    dispatch({ type: "RESET" });
+  }, [dispatch]);
+
+  return { user: state, createNewUser, reset };
 };
 
 export { UserProvider, useUser };

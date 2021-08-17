@@ -1,11 +1,11 @@
 import React from "react";
 
-import { Login } from "./Pages/Login/Login";
-import { Dashboard } from "./Pages/Dashboard/Dashboard";
+import { Login } from "./pages/login/Login";
+import { Dashboard } from "./pages/dashboard/Dashboard";
 
 import "./App.css";
 
-import { useUser } from "./Contexts/userContext";
+import { useUser } from "./contexts/userContext";
 
 function App() {
   const { user } = useUser();
@@ -13,11 +13,7 @@ function App() {
     return <Login />;
   }
 
-  return (
-    <div className="App">
-      <Dashboard />
-    </div>
-  );
+  return <Dashboard />;
 }
 
 export default App;

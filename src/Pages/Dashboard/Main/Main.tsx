@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 
-import { Messages } from "./Messages/Messages";
-import { useMutation } from "../../../Hooks/useMutation";
+import { Messages } from "./messages/Messages";
+import { useMutation } from "../../../hooks/useMutation";
 
 import { ajaxClient } from "../../../ajaxClient/ajaxClient";
-import { useUser } from "../../../Contexts/userContext";
+import { useUser } from "../../../contexts/userContext";
 
 import { STATUS } from "../../../constants";
 

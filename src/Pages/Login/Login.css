@@ -1,11 +1,3 @@
-::placeholder {
-  text-align: center;
-}
-
-input {
-  text-align: center;
-}
-
 .login-wrapper {
   color: #f1faee;
   display: flex;

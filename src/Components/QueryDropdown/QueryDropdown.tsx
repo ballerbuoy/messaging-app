@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import { useQuery } from "../../Hooks/useQuery";
+import { useQuery } from "../../hooks/useQuery";
 
 import "./QueryDropdown.css";
 

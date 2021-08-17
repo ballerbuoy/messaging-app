@@ -1,5 +1,5 @@
 .loading-messages-wrapper {
-  overflow: scroll;
+  /* overflow: scroll; */
   flex: 0 1 auto;
   height: 82vh;
   display: flex;
@@ -13,7 +13,6 @@
   align-items: center;
   margin-left: 10px;
   color: #1d3557;
-  /*display flex row*/
 }
 
 .loading-header-wrapper {
@@ -27,13 +26,20 @@
   width: 180px;
   background-color: #e2ece9;
   margin-right: auto;
+  margin-top: 10px;
   border-radius: 5px;
 }
 
 .loading-messages-body {
-  /* display flex col grow 1 */
+  overflow-y: scroll;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   flex: 1 1 auto;
+}
+
+.loading-separator {
+  height: 2px;
+  width: 100%;
+  background-color: #1d3557;
 }

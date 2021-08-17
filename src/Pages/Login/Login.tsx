@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 
 import { UserInfo } from "../../types/User.interface";
 
-import { useMutation } from "../../Hooks/useMutation";
-import { useUser } from "../../Contexts/userContext";
+import { useMutation } from "../../hooks/useMutation";
+import { useUser } from "../../contexts/userContext";
 import { ajaxClient } from "../../ajaxClient/ajaxClient";
 
 import { STATUS } from "../../constants";
@@ -24,7 +24,6 @@ export function Login() {
     mutate({ username, password });
   };
 
-  //TODO: pass options to mutate onSuccess, onError
   useEffect(() => {
     if (data) {
       createNewUser(data);
@@ -41,7 +40,6 @@ export function Login() {
       <h1>Please Log In!</h1>
       <form onSubmit={handleSubmit} className="login-form">
         <label className="field-wrapper">
-          <p>Username</p>
           <input
             type="text"
             value={username}
@@ -50,7 +48,6 @@ export function Login() {
           />
         </label>
         <label className="field-wrapper">
-          <p>Password</p>
           <input
             type="password"
             value={password}

@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Avatar } from "./Avatar/Avatar";
-import { QueryDropdown } from "../../../Components/QueryDropdown/QueryDropdown";
+import { Avatar } from "./avatar/Avatar";
+import { QueryDropdown } from "../../../components/queryDropdown/QueryDropdown";
 
 import "./Header.css";
 
